@@ -7,7 +7,12 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Nav() {
   return (
-    <Flex justifyContent={"space-between"} p={"4"} alignItems={"center"}>
+    <Flex
+      justifyContent={"space-between"}
+      py={"4"}
+      px={[20, 10]}
+      alignItems={"center"}
+    >
       <Text fontWeight={"bold"} fontSize={"1.3rem"}>
         🌈 Git DAO
       </Text>
