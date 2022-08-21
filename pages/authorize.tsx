@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import PageLayout from "../layouts";
 import { fetchTokenInfo } from "../utils";
 
-export default function authorize() {
+export default function authorize(): React.ReactNode {
   const router = useRouter();
   useEffect(() => {
     fetchTokenInfo(router.query["code"] as string);
