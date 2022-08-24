@@ -1,11 +1,12 @@
 // pages/_app.js
-import React from "react";
+import React, { useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { AppProps } from "next/app";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import useStore from "../store";
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
@@ -24,6 +25,18 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
+  const store = useStore();
+  useEffect(() => {
+    // Fetch accessToken
+    const matchedData = document.cookie.match(/(?<=access_token=)\w+/g);
+    if (!matchedData) {
+      store.setAccessToken(null);
+    } else {
+      store.setAccessToken(matchedData[0]);
+    }
+
+    // Fetch userinfo
+  }, []);
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>

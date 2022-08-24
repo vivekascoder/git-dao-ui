@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 
 export default function Auth() {
   const router = useRouter();
-  useEffect(() => {
-    fetchTokenInfo(router.query["code"] as string);
-  }, []);
+  // useEffect(() => {
+  //   fetchTokenInfo(router.query["code"] as string);
+  // }, []);
   return <Box>Done...</Box>;
 }
