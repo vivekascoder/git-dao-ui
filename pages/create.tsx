@@ -1,28 +1,20 @@
 import { Box, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import GithubRepoSearch from "../components/GithubRepoSearch";
 import PageLayout from "../layouts";
+import useGlobalStore from "../store";
 
 export default function create() {
   const [repos, setRepos] = useState([]);
-  useEffect(() => {
-    const fetchUserRepositories = async () => {
-      const { data } = await axios.get(`https://api.github.com/user/repos`, {
-        headers: {
-          Authorization: `token ${document.cookie.replace(
-            "access_token=",
-            ""
-          )}`,
-        },
-      });
-      setRepos(data);
-    };
-    fetchUserRepositories();
-  }, []);
+  const accessToken = useGlobalStore((s) => s.accessToken);
+
   return (
     <PageLayout>
-      <Box>Authorized</Box>
-      <div></div>
+      <Box>Authorized {accessToken}</Box>
+      <Box>
+        <GithubRepoSearch />
+      </Box>
     </PageLayout>
   );
 }

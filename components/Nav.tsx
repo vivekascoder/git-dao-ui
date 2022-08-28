@@ -4,6 +4,7 @@ import React from "react";
 import { Flex, Spacer, Text } from "@chakra-ui/react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 
 export default function Nav() {
   return (
@@ -13,9 +14,11 @@ export default function Nav() {
       px={[20, 10]}
       alignItems={"center"}
     >
-      <Text fontWeight={"bold"} fontSize={"1.3rem"}>
-        🌈 Git DAO
-      </Text>
+      <Link href={"/"}>
+        <Text fontWeight={"bold"} fontSize={"1.3rem"} cursor={"pointer"}>
+          🌈 Git DAO
+        </Text>
+      </Link>
       <ConnectButton />
     </Flex>
   );

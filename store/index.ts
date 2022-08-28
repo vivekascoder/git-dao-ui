@@ -1,17 +1,21 @@
 import create from "zustand";
+import { UserInfo } from "../utils/github";
 
+export type OptionalString = string | null;
 interface StoreInterface {
-  username: null | string;
-  accessToken: null | string;
-  setUsername: (u: string | null) => void;
-  setAccessToken: (t: string | null) => void;
+  user: null | UserInfo;
+  accessToken: OptionalString;
+  setUser: (u: UserInfo | null) => void;
+  setAccessToken: (t: OptionalString) => void;
 }
 
-const useStore = create<StoreInterface>((set) => ({
-  username: null,
+const useGlobalStore = create<StoreInterface>((set) => ({
+  user: null,
   accessToken: null,
-  setUsername: (u) => set((state) => ({ username: u })),
-  setAccessToken: (t) => set(() => ({ accessToken: t })),
+  setUser: (u: UserInfo | null) => set(() => ({ user: u })),
+
+  // Set the accessToken
+  setAccessToken: (t) => set({ accessToken: t }),
 }));
 
-export default useStore;
+export default useGlobalStore;

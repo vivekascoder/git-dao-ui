@@ -6,7 +6,9 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-import useStore from "../store";
+import useGlobalState from "../store";
+import { fetchAuthenticatedUser } from "../utils/github";
+import "../styles/globals.css";
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.polygon, chain.optimism, chain.arbitrum],
@@ -25,18 +27,42 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
-  const store = useStore();
+  // const store = useGlobalState((state) => state);
+  const accessToken = useGlobalState((state) => state.accessToken);
+  const user = useGlobalState((state) => state.user);
+  const setAccessToken = useGlobalState((state) => state.setAccessToken);
+  const setUser = useGlobalState((state) => state.setUser);
   useEffect(() => {
-    // Fetch accessToken
-    const matchedData = document.cookie.match(/(?<=access_token=)\w+/g);
+    console.log("> Fetch accessToken");
+    const matchedData = document.cookie.match(/(?<=access_token=)\w*/g);
     if (!matchedData) {
-      store.setAccessToken(null);
+      setAccessToken(null);
     } else {
-      store.setAccessToken(matchedData[0]);
+      setAccessToken(matchedData[0]);
     }
-
-    // Fetch userinfo
   }, []);
+  useEffect(() => {
+    console.log("> Running to fetch userINfo");
+    // Fetch userinfo
+    async function doo() {
+      if (!accessToken) {
+        console.error("No access token.", user, accessToken);
+      } else {
+        try {
+          console.log("Working");
+          const user = await fetchAuthenticatedUser(accessToken);
+          setUser(user);
+        } catch (e) {
+          console.log("Logging out");
+          // Logout the user.
+          setUser(null);
+          document.cookie = "";
+          setAccessToken(null);
+        }
+      }
+    }
+    doo();
+  }, [accessToken]);
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>

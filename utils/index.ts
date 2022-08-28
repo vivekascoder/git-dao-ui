@@ -15,8 +15,6 @@ export const fetchTokenInfo = async (code: string) => {
       }
     );
     const data: string = res.data;
-    console.log("> ReQ", typeof data, data);
-    console.log(data);
     return { status: true, data: data };
   } catch (e) {
     return { status: false, data: (e as Error).message };
