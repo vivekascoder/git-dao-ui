@@ -15,7 +15,7 @@ export default function magic() {
   useEffect(() => {
     // Redirect if login
     if (user) {
-      router.push("/create");
+      router.push("/select_repo");
     }
   }, [user]);
 

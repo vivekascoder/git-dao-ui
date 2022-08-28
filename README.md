@@ -47,3 +47,18 @@ Stuff needee: login, id, avatar_url
   "updated_at": "2022-08-23T15:26:16Z"
 }
 ```
+
+## Contract Integration
+
+```sol
+    function createDAO(
+        string memory _daoTokenName,
+        string memory _daoTokenSymbol,
+        uint256 _daoTokenSupply,
+        uint256 _minDelay,
+        uint256 _quorumPercentage,
+        uint256 _votingPeriod,
+        uint256 _votingDelay
+    ) external;
+
+```

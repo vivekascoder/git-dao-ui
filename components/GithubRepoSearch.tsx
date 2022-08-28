@@ -1,17 +1,20 @@
 import {
   Box,
+  Button,
   filter,
   Input,
   InputGroup,
   InputLeftElement,
+  Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useGlobalStore from "../store";
 import { UserInfo } from "../utils/github";
+import { useRouter } from "next/router";
 
-type RepoType = {
+export type RepoType = {
   id: number;
   nodeId: string;
   fullName: string;
@@ -29,11 +32,14 @@ const filterData = (data: any): RepoType[] =>
 const fetchUserRepositories = async (
   accessToken: string
 ): Promise<RepoType[]> => {
-  const { data } = await axios.get(`https://api.github.com/user/repos`, {
-    headers: {
-      Authorization: `token ${accessToken}`,
-    },
-  });
+  const { data } = await axios.get(
+    `https://api.github.com/user/repos?affiliation=owner`,
+    {
+      headers: {
+        Authorization: `token ${accessToken}`,
+      },
+    }
+  );
   return filterData(data);
 };
 
@@ -82,6 +88,32 @@ function useDebounce<T>(value: T, delay: number): T {
   );
   return debouncedValue;
 }
+interface IRepoItem {
+  repo: RepoType;
+  onClick: (repo: RepoType) => void;
+}
+const RepoItem: React.FunctionComponent<IRepoItem> = (props) => {
+  return (
+    <Box
+      display={"flex"}
+      alignItems="center"
+      justifyContent={"space-between"}
+      py={3}
+    >
+      <Text fontWeight={"semibold"} fontSize="1.2rem">
+        {props.repo.fullName}
+      </Text>
+      <Button
+        colorScheme={"blue"}
+        onClick={() => {
+          props.onClick(props.repo);
+        }}
+      >
+        Create
+      </Button>
+    </Box>
+  );
+};
 
 export default function GithubRepoSearch() {
   const [repos, setRepos] = useState<any>([]);
@@ -92,6 +124,7 @@ export default function GithubRepoSearch() {
   // Global state stuff.
   const user = useGlobalStore((s) => s.user);
   const accessToken = useGlobalStore((s) => s.accessToken);
+  const setSelectedRepo = useGlobalStore((s) => s.setSelectedRepo);
 
   useEffect(() => {
     if (debounceSearchTerm && user) {
@@ -118,6 +151,7 @@ export default function GithubRepoSearch() {
       doo();
     }
   }, [accessToken]);
+  const router = useRouter();
 
   return (
     <Box>
@@ -136,11 +170,24 @@ export default function GithubRepoSearch() {
       </InputGroup>
 
       {/* List of repos */}
-      <ul>
-        {repos.map((repo: any, id: number) => (
-          <li key={id}>{repo.fullName}</li>
+      <Box
+        maxHeight="20rem"
+        overflowY={"scroll"}
+        backgroundColor={"#1a294b"}
+        p={3}
+        borderBottomRadius={3}
+      >
+        {repos.map((repo: RepoType, id: number) => (
+          <RepoItem
+            repo={repo}
+            key={id}
+            onClick={(repo: RepoType) => {
+              setSelectedRepo(repo);
+              router.push("/create");
+            }}
+          />
         ))}
-      </ul>
+      </Box>
     </Box>
   );
 }
