@@ -5,7 +5,7 @@ import React from "react";
 
 export default function layout(props: React.PropsWithChildren) {
   return (
-    <div style={{ minHeight: "100vh", background: "#0f172a", color: "white" }}>
+    <div style={{ minHeight: "100vh" }}>
       <Head>
         <title>Git DAO</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

@@ -173,7 +173,8 @@ export default function GithubRepoSearch() {
       <Box
         maxHeight="20rem"
         overflowY={"scroll"}
-        backgroundColor={"#1a294b"}
+        // backgroundColor={"#1a294b"}
+        shadow={"sm"}
         p={3}
         borderBottomRadius={3}
       >
