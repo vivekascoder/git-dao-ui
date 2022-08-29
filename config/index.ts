@@ -1,0 +1,7 @@
+const CONFIG = {
+  CONTRACTS: {
+    DAO_FACTORY: "0xfA2E294f53789b082DB685C16b5646447a7aa19f",
+  },
+};
+
+export default CONFIG;

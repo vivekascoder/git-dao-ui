@@ -63,6 +63,7 @@ export default function CreateDAOForm() {
             type={"text"}
             value={daoTokenName}
             onChange={(e) => setDAOTokenName(e.target.value)}
+            placeholder={"Super DAO token"}
           />
         </Box>
         <Box mb={4} width="full">
@@ -72,6 +73,7 @@ export default function CreateDAOForm() {
             type={"text"}
             value={daoTokenSymbol}
             onChange={(e) => setDAOTokenSymbol(e.target.value)}
+            placeholder={"SDT"}
           />
         </Box>
       </Box>
