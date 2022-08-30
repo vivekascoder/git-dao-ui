@@ -5,6 +5,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { ContractInterface, ethers } from "ethers";
 import { useState } from "react";
@@ -20,16 +21,26 @@ export interface IInputControl {
 export default function CreateDAOForm() {
   const [daoTokenName, setDAOTokenName] = useState<string>("");
   const [daoTokenSymbol, setDAOTokenSymbol] = useState<string>("");
-  const [tokenSupply, setTokenSupply] = useState<string>("");
-  const [minDelay, setMinDelay] = useState<string>("");
-  const [quoromPercentage, setQuoromPercentage] = useState<string>("");
-  const [votingPeriod, setVotingPeriod] = useState<string>("");
-  const [votingDelay, setVotingDelay] = useState<string>("");
+  const [tokenSupply, setTokenSupply] = useState<string>(
+    CONFIG.DEFAULT_VALUES.SUPPLY
+  );
+  const [minDelay, setMinDelay] = useState<string>(
+    CONFIG.DEFAULT_VALUES.MIN_DELAY
+  );
+  const [quoromPercentage, setQuoromPercentage] = useState<string>(
+    CONFIG.DEFAULT_VALUES.QUORAM_PERCENTAGE
+  );
+  const [votingPeriod, setVotingPeriod] = useState<string>(
+    CONFIG.DEFAULT_VALUES.VOTING_PERIOD
+  );
+  const [votingDelay, setVotingDelay] = useState<string>(
+    CONFIG.DEFAULT_VALUES.VOTING_DELAY
+  );
 
-  const tokenSupplyWithDecimals = BigNumber.from(tokenSupply).mul(
+  const tokenSupplyWithDecimals = BigNumber.from(tokenSupply || "0").mul(
     BigNumber.from(ethers.utils.parseEther("1"))
   );
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { data, isLoading, isSuccess, write, error } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: CONFIG.CONTRACTS.DAO_FACTORY,
     contractInterface: CONFIG.INTERFACES.DAO_FACTORY.abi as ContractInterface,
@@ -43,10 +54,34 @@ export default function CreateDAOForm() {
       votingPeriod,
       votingDelay,
     ],
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    },
+    onSuccess(data) {
+      toast({
+        title: "Transaction Sent",
+        description: "Hash: " + data.hash,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    },
   });
+
+  const toast = useToast();
+
   // TODO: Use formik
   const handleSubmit = () => {
     write();
+    console.log(">>> Yayy!");
   };
 
   return (
@@ -139,12 +174,12 @@ export default function CreateDAOForm() {
         <Button
           colorScheme={"blue"}
           disabled={!write}
-          onClick={() => write?.()}
+          isLoading={isLoading}
+          onClick={handleSubmit}
         >
           🚀 Create
         </Button>
       </Box>
-      <p>{JSON.stringify(data, null, 2)}</p>
     </FormControl>
   );
 }

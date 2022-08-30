@@ -5,6 +5,13 @@ const CONFIG = {
   INTERFACES: {
     DAO_FACTORY: require("../public/contracts/DAOFactory.sol/DAOFactory.json"),
   },
+  DEFAULT_VALUES: {
+    SUPPLY: "10000000",
+    QUORAM_PERCENTAGE: "4",
+    VOTING_PERIOD: "20",
+    VOTING_DELAY: "20",
+    MIN_DELAY: "20",
+  },
 };
 
 export default CONFIG;
