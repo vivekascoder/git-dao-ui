@@ -5,10 +5,10 @@ import { chain, configureChains, createClient } from "wagmi";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    chain.mainnet,
-    chain.polygon,
-    chain.optimism,
-    chain.arbitrum,
+    // chain.mainnet,
+    // chain.polygon,
+    // chain.optimism,
+    // chain.arbitrum,
     chain.polygonMumbai,
   ],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
