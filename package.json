@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update_artifacts": "cp -r $HOME/code/git_dao/artifacts ./public/artifacts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",

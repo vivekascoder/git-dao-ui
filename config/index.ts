@@ -1,6 +1,9 @@
 const CONFIG = {
   CONTRACTS: {
-    DAO_FACTORY: "0xfA2E294f53789b082DB685C16b5646447a7aa19f",
+    DAO_FACTORY: "0xC8A7Ef44347f13683F624D1ef9736DE3e84D8e41",
+  },
+  INTERFACES: {
+    DAO_FACTORY: require("../public/artifacts/contracts/DAOFactory.sol/DAOFactory.json"),
   },
 };
 

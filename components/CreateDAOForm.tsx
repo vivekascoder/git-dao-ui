@@ -6,39 +6,48 @@ import {
   Heading,
   Input,
 } from "@chakra-ui/react";
+import { ContractInterface, ethers } from "ethers";
 import { useState } from "react";
+import { usePrepareContractWrite, useContractWrite, useContract } from "wagmi";
+import CONFIG from "../config";
+import { BigNumber } from "ethers";
 
 export interface IInputControl {
   name: string;
   label: string;
 }
-// const InputControl = ({ name, label }: IInputControl) => {
-//   const { input, meta } = useField(name);
-//   return (
-//     <Control name={name} my={4}>
-//       <FormLabel htmlFor={name}>{label}</FormLabel>
-//       <Input
-//         {...input}
-//         isInvalid={meta.error && meta.touched}
-//         id={name}
-//         placeholder={label}
-//       />
-//       <Error name={name} />
-//     </Control>
-//   );
-// };
 
 export default function CreateDAOForm() {
   const [daoTokenName, setDAOTokenName] = useState<string>("");
   const [daoTokenSymbol, setDAOTokenSymbol] = useState<string>("");
-  const [tokenSupply, setTokenSupply] = useState<number>(0);
-  const [minDelay, setMinDelay] = useState<number>(0);
-  const [quoromPercentage, setQuoromPercentage] = useState<number>(0);
-  const [votingPeriod, setVotingPeriod] = useState<number>(0);
-  const [votingDelay, setVotingDelay] = useState<number>(0);
+  const [tokenSupply, setTokenSupply] = useState<string>("");
+  const [minDelay, setMinDelay] = useState<string>("");
+  const [quoromPercentage, setQuoromPercentage] = useState<string>("");
+  const [votingPeriod, setVotingPeriod] = useState<string>("");
+  const [votingDelay, setVotingDelay] = useState<string>("");
 
+  const tokenSupplyWithDecimals = BigNumber.from(tokenSupply).mul(
+    BigNumber.from(ethers.utils.parseEther("1"))
+  );
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    mode: "recklesslyUnprepared",
+    addressOrName: CONFIG.CONTRACTS.DAO_FACTORY,
+    contractInterface: CONFIG.INTERFACES.DAO_FACTORY.abi as ContractInterface,
+    functionName: "createDAO",
+    args: [
+      daoTokenName,
+      daoTokenSymbol,
+      tokenSupplyWithDecimals,
+      minDelay,
+      quoromPercentage,
+      votingPeriod,
+      votingDelay,
+    ],
+  });
   // TODO: Use formik
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    write();
+  };
 
   return (
     <FormControl
@@ -81,9 +90,9 @@ export default function CreateDAOForm() {
         <FormLabel htmlFor={"name"}>DAO Token Supply</FormLabel>
         <Input
           name="daoTokenSupply"
-          type={"number"}
+          type={"text"}
           value={tokenSupply}
-          onChange={(e) => setTokenSupply(parseInt(e.target.value))}
+          onChange={(e) => setTokenSupply(e.target.value)}
         />
       </Box>
       <Box display={"flex"}>
@@ -91,18 +100,18 @@ export default function CreateDAOForm() {
           <FormLabel htmlFor={"name"}>Min Delay</FormLabel>
           <Input
             name="minDelay"
-            type={"number"}
+            type={"text"}
             value={minDelay}
-            onChange={(e) => setMinDelay(parseInt(e.target.value))}
+            onChange={(e) => setMinDelay(e.target.value)}
           />
         </Box>
         <Box mb={4} width="full">
           <FormLabel htmlFor={"name"}>Quorum Percentage</FormLabel>
           <Input
             name="quoromPercentage"
-            type={"number"}
+            type={"text"}
             value={quoromPercentage}
-            onChange={(e) => setQuoromPercentage(parseInt(e.target.value))}
+            onChange={(e) => setQuoromPercentage(e.target.value)}
           />
         </Box>
       </Box>
@@ -111,24 +120,31 @@ export default function CreateDAOForm() {
           <FormLabel htmlFor={"name"}>Voting Period</FormLabel>
           <Input
             name="votingPeriod"
-            type={"number"}
+            type={"text"}
             value={votingPeriod}
-            onChange={(e) => setMinDelay(parseInt(e.target.value))}
+            onChange={(e) => setVotingPeriod(e.target.value)}
           />
         </Box>
         <Box mb={4} width="full">
           <FormLabel htmlFor={"name"}>Voting Delay</FormLabel>
           <Input
             name="votingDelay"
-            type={"number"}
+            type={"text"}
             value={votingDelay}
-            onChange={(e) => setVotingDelay(parseInt(e.target.value))}
+            onChange={(e) => setVotingDelay(e.target.value)}
           />
         </Box>
       </Box>
       <Box>
-        <Button colorScheme={"blue"}>🚀 Create</Button>
+        <Button
+          colorScheme={"blue"}
+          disabled={!write}
+          onClick={() => write?.()}
+        >
+          🚀 Create
+        </Button>
       </Box>
+      <p>{JSON.stringify(data, null, 2)}</p>
     </FormControl>
   );
 }
