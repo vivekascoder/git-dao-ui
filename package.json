@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "update_artifacts": "cp -r $HOME/code/git_dao/artifacts/contracts ./public/contracts"
+    "update_artifacts": "rm -rf ./public/contracts/ && cp -r $HOME/code/git_dao/artifacts/contracts ./public/"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",

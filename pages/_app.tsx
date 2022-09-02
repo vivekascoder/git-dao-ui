@@ -11,7 +11,6 @@ import { fetchAuthenticatedUser } from "../utils/github";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
-  // const store = useGlobalState((state) => state);
   const accessToken = useGlobalState((state) => state.accessToken);
   const user = useGlobalState((state) => state.user);
   const setAccessToken = useGlobalState((state) => state.setAccessToken);
