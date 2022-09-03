@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
 
-export default function layout(props: React.PropsWithChildren) {
+export default function PageLayout(props: React.PropsWithChildren) {
   return (
     <div style={{ minHeight: "100vh" }}>
       <Head>
