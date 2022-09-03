@@ -40,8 +40,8 @@ export default function Home(): React.ReactNode {
       model.current!.scale.y -= 0.2;
       model.current!.scale.z -= 0.2;
 
-      const x = model.current!.rotation.x;
-      const y = model.current!.rotation.y;
+      const x = model.current!.rotation.x - 0.5 / 2;
+      const y = model.current!.rotation.y - 0.5 / 2;
       const z = model.current!.rotation.z;
 
       setOriginalX(x);
@@ -72,9 +72,17 @@ export default function Home(): React.ReactNode {
           and build economy around it and start supporting and growing your open
           source projects.
         </Text>
-        <Flex justifyContent="center" alignItems="center" mt={8}>
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          mt={8}
+          experimental_spaceX={4}
+        >
           <Link href={"/magic"}>
             <Button colorScheme="blue">🎩 Experience Magic</Button>
+          </Link>
+          <Link href={"/dao"}>
+            <Button colorScheme="purple">⚖️ See DAOs</Button>
           </Link>
         </Flex>
         <Box mt={20}>
