@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import PageLayout from "../../../layouts";
 
-export default function DaoForContract(props): React.ReactNode {
+export default function DaoForContract(): React.ReactNode {
   const router = useRouter();
   return (
     <PageLayout>

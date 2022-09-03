@@ -21,38 +21,60 @@ import PageLayout from "../../../layouts";
 import { useFormik } from "formik";
 
 export const RewardContributorForm = (): JSX.Element => {
-  const formik = useFormik<{ address: string; amount: string }>({
+  const formik = useFormik<{
+    address: string;
+    amount: string;
+    description: string;
+  }>({
     initialValues: {
       address: "",
       amount: "0",
+      description: "",
     },
     onSubmit: (values) => {
       console.log(values);
     },
   });
+
   return (
-    <form>
+    <form onSubmit={formik.handleSubmit}>
       <Box experimental_spaceY={4}>
         <FormControl>
-          <FormLabel>🦄 Contributor's Address</FormLabel>
-          <Input type="email" />
+          <FormLabel htmlFor="address">🦄 Contributor's Address</FormLabel>
+          <Input
+            type="string"
+            name="address"
+            value={formik.values.address}
+            onChange={formik.handleChange}
+          />
           <FormHelperText>Address of the contributor</FormHelperText>
         </FormControl>
         <FormControl>
-          <FormLabel>🎁 Amount</FormLabel>
-          <Input type="email" />
+          <FormLabel htmlFor="amount">🎁 Amount</FormLabel>
+          <Input
+            type="string"
+            name="amount"
+            value={formik.values.amount}
+            onChange={formik.handleChange}
+          />
           <FormHelperText>Amount of tokens to reward.</FormHelperText>
         </FormControl>
 
         <FormControl>
-          <FormLabel>📝 Proposal Description</FormLabel>
-          <Textarea />
+          <FormLabel htmlFor="description">📝 Proposal Description</FormLabel>
+          <Textarea
+            name="description"
+            value={formik.values.description}
+            onChange={formik.handleChange}
+          />
           <FormHelperText>
             Write short description about your proposal.
           </FormHelperText>
         </FormControl>
 
-        <Button colorScheme={"blue"}>✅ Propose</Button>
+        <Button type="submit" colorScheme={"blue"}>
+          ✅ Propose
+        </Button>
       </Box>
     </form>
   );

@@ -23,9 +23,7 @@ export default function Home(): React.ReactNode {
       }
     });
     window.addEventListener("mousemove", (ev: MouseEvent) => {
-      console.log(model.current);
       if (!model.current) return;
-      console.log({ y: ev.clientY, yy: ev.y });
       model.current!.rotation.x = originalY + (0.5 * ev.clientY) / 1000;
       model.current!.rotation.y = originalX + (0.5 * ev.clientX) / 1000;
     });
