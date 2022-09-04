@@ -9,6 +9,7 @@ import { chains, wagmiClient } from "../utils/wagmi";
 import useGlobalState from "../store";
 import { fetchAuthenticatedUser } from "../utils/github";
 import "../styles/globals.css";
+import "../styles/piechart.css";
 
 function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
   const accessToken = useGlobalState((state) => state.accessToken);

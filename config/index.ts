@@ -1,9 +1,23 @@
 const CONFIG = {
+  CHAIN_ID: {
+    POLYGON_TESTNET: "0x13881",
+  },
+  SCAN_URL: "https://mumbai.polygonscan.com/address/",
   CONTRACTS: {
     DAO_FACTORY: "0xBCD2F6aC5c04B6b8C1D3700B8Ae98609FB578830",
   },
   INTERFACES: {
     DAO_FACTORY: require("../public/contracts/DAOFactory.sol/DAOFactory.json"),
+    DAO_TOKEN: require("../public/contracts/DAOToken.sol/DAOToken.json"),
+    GIT_DAO: require("../public/contracts/GitDAO.sol/GitDAO.json"),
+    DAO: require("../public/contracts/DAO.sol/DAO.json"),
+
+    // Events to fetch.
+    EVENTS: {
+      DAO_CREATED: {
+        ID: "0x3f3be9496960aa004c2a949565d7deb94bd048ad5f72b1b8a76c6bb0196cf480",
+      },
+    },
   },
   DEFAULT_VALUES: {
     SUPPLY: 10000000,

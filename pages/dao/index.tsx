@@ -6,15 +6,48 @@ import CONFIG from "../../config";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { GetServerSideProps, NextPage } from "next";
+import { encodeData } from "../../utils";
 
 /**
  * # Goal ?
  * + List all the DAOs created from the contract.
  */
+export type TParsedDAO = {
+  dao: string;
+  daoToken: string;
+  daoTimelock: string;
+  gitDao: string;
+  gitUrl: string;
+  gitId: string;
+  creator: string;
+};
+export type TDAO = {
+  dinfo: [string, string, string, boolean];
+  gitDaoCreator: [string, string];
+  daoTimelock: string;
+  gitUrl: string;
+  gitId: string;
+};
+export interface PageProps {
+  daos: {
+    total: number;
+    page: number;
+    page_size: number;
+    result: {
+      transaction_hash: string;
+      address: string;
+      block_timestamp: string;
+      block_number: string;
+      block_hash: string;
+      data: TDAO;
+    }[];
+  };
+}
 export interface IListItem {
   title: string;
   address: string;
   children?: React.ReactNode;
+  daoObject: TDAO;
 }
 export const ListItem = (props: IListItem): JSX.Element => {
   const router = useRouter();
@@ -28,7 +61,7 @@ export const ListItem = (props: IListItem): JSX.Element => {
       borderRadius={"md"}
       py={4}
     >
-      <Text fontWeight={"medium"}>{props.title}</Text>
+      <Text fontWeight={"bold"}>{props.title}</Text>
       <Button
         colorScheme={"blue"}
         rightIcon={<ArrowForwardIcon />}
@@ -37,8 +70,18 @@ export const ListItem = (props: IListItem): JSX.Element => {
         px={4}
         onClick={() => {
           router.push({
-            pathname: "/dao/[contract]",
-            query: { contract: props.address },
+            pathname: "/dao/[slug]",
+            query: {
+              slug: encodeData({
+                dao: props.daoObject.dinfo[2],
+                daoToken: props.daoObject.dinfo[0],
+                daoTimelock: props.daoObject.dinfo[1],
+                gitDao: props.daoObject.gitDaoCreator[0],
+                gitUrl: props.daoObject.gitUrl,
+                gitId: props.daoObject.gitId,
+                creator: props.daoObject.gitDaoCreator[1],
+              }),
+            },
           });
         }}
       >
@@ -48,26 +91,6 @@ export const ListItem = (props: IListItem): JSX.Element => {
   );
 };
 
-interface PageProps {
-  daos: {
-    total: number;
-    page: number;
-    page_size: number;
-    result: {
-      transaction_hash: string;
-      address: string;
-      block_timestamp: string;
-      block_number: string;
-      block_hash: string;
-      data: {
-        creator: string;
-        dao: string;
-        daoTimelock: string;
-        daoToken: string;
-      };
-    }[];
-  };
-}
 const daos: NextPage<PageProps> = (props) => {
   return (
     <PageLayout>
@@ -78,7 +101,12 @@ const daos: NextPage<PageProps> = (props) => {
       </Box>
       <Box experimental_spaceY={3}>
         {props.daos.result.map((d, index) => (
-          <ListItem key={index} title={d.data.dao} address={d.data.dao} />
+          <ListItem
+            key={index}
+            title={d.data.gitUrl}
+            address={d.data.dinfo[2]}
+            daoObject={d.data}
+          />
         ))}
       </Box>
     </PageLayout>
@@ -86,43 +114,14 @@ const daos: NextPage<PageProps> = (props) => {
 };
 export default daos;
 
-const ABI = {
-  anonymous: false,
-  inputs: [
-    {
-      indexed: false,
-      internalType: "address",
-      name: "daoToken",
-      type: "address",
-    },
-    {
-      indexed: false,
-      internalType: "address",
-      name: "daoTimelock",
-      type: "address",
-    },
-    {
-      indexed: false,
-      internalType: "address",
-      name: "dao",
-      type: "address",
-    },
-    {
-      indexed: false,
-      internalType: "address",
-      name: "creator",
-      type: "address",
-    },
-  ],
-  name: "DAOCreated",
-  type: "event",
-};
 const options = {
-  chain: "0x13881",
-  address: "0xC8A7Ef44347f13683F624D1ef9736DE3e84D8e41",
-  topic: "0x4db6ee38117e611315b34948f609eed3356f7c79be1c2e94a2a636a7e9599cf7",
-  limit: 3,
-  abi: ABI,
+  chain: CONFIG.CHAIN_ID.POLYGON_TESTNET,
+  address: CONFIG.CONTRACTS.DAO_FACTORY,
+  topic: CONFIG.INTERFACES.EVENTS.DAO_CREATED.ID,
+  abi: CONFIG.INTERFACES.DAO_FACTORY.abi.find(
+    (d: { name: string; type: string }) =>
+      d.name === "DAOCreated" && d.type === "event"
+  ),
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {

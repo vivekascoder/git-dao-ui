@@ -20,3 +20,11 @@ export const fetchTokenInfo = async (code: string) => {
     return { status: false, data: (e as Error).message };
   }
 };
+
+export const encodeData = (o: object): string => {
+  return btoa(JSON.stringify(o));
+};
+
+export const decodeData = (s: string): object => {
+  return JSON.parse(atob(s));
+};
