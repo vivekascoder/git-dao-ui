@@ -1,6 +1,10 @@
 body {
   /* background-color:  #0f172a !important; */
 }
+@font-face {
+  font-family: "Cute Aurora";
+  src: url(/aurora.ttf);
+}
 * {
   font-family: "Cute Aurora" !important;
 }
