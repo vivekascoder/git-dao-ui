@@ -17,8 +17,34 @@ import PageLayout from "../../../layouts";
 import { decodeData } from "../../../utils";
 import { useContractRead } from "wagmi";
 import { BigNumber, ethers } from "ethers";
+import { fetchAllDAOProposals } from "../../../utils/emvApi";
+import { GetServerSideProps, NextPage } from "next";
 
-export default function DaoForContract(): React.ReactNode {
+interface IDaoPageProps {
+  total: number;
+  page: number;
+  page_size: number;
+  result: {
+    transaction_hash: string;
+    address: string;
+    block_timestamp: string;
+    block_number: string;
+    block_hash: string;
+    data: {
+      proposalId: string;
+      proposer: string;
+      targets: [string];
+      values: [string];
+      signatures: [string];
+      calldatas: [string];
+      startBlock: string;
+      endBlock: string;
+      description: string;
+    };
+  }[];
+}
+
+const dao: NextPage<IDaoPageProps> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
   // const [totalSupply, setTotalSupply] = useState<string>("");
   const router = useRouter();
@@ -172,4 +198,22 @@ export default function DaoForContract(): React.ReactNode {
       </Box>
     </PageLayout>
   );
-}
+};
+export default dao;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log("> Server side props.");
+  if (!context.query["slug"]) {
+    console.log(">>> Aint got nothin");
+    return { props: { daos: [] } };
+  }
+  const parsedDao = decodeData(context.query["slug"] as string) as TParsedDAO;
+  console.log("Dao", parsedDao.dao);
+  const events = await fetchAllDAOProposals(parsedDao.dao);
+  console.log(JSON.stringify(events, null, 2));
+  return {
+    props: {
+      daos: events,
+    },
+  };
+};

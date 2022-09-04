@@ -63,6 +63,18 @@ Stuff needee: login, id, avatar_url
 
 ```
 
-##
+## Event when proposing a proposal.
 
-"execution reverted: AccessControl: account 0x1b626a54106113691f7858ea4b5406834506d866 is missing role 0x5f58e3a2316349923ce3780f8d587db2d72378aed66a8261c916544fa6846ca5"
+```sol
+emit ProposalCreated(
+  proposalId,
+  _msgSender(),
+  targets,
+  values,
+  new string[](targets.length),
+  calldatas,
+  snapshot,
+  deadline,
+  description
+);
+```

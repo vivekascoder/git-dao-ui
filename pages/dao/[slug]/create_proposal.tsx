@@ -17,7 +17,7 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import PageLayout from "../../../layouts";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -27,8 +27,9 @@ import { decodeData } from "../../../utils";
 import { useContractWrite } from "wagmi";
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import CONFIG from "../../../config";
+import { fetchAllDAOProposals } from "../../../utils/emvApi";
 
-export const RewardContributorForm = (): JSX.Element => {
+export const RewardContributorForm = () => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
   const router = useRouter();
   const toast = useToast();
@@ -168,7 +169,7 @@ export const RewardContributorForm = (): JSX.Element => {
   );
 };
 
-const create_proposal: NextPage = () => {
+const create_proposal: NextPage<any> = () => {
   return (
     <PageLayout>
       <Box mb={6}>
@@ -197,4 +198,5 @@ const create_proposal: NextPage = () => {
     </PageLayout>
   );
 };
+
 export default create_proposal;
