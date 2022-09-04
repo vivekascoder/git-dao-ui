@@ -21,7 +21,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { usePrepareContractWrite, useContractWrite, useContract } from "wagmi";
 import CONFIG from "../config";
 import { BigNumber } from "ethers";
-import useGlobalStore from "../store";
 import { RepoType } from "./GithubRepoSearch";
 import { useFormik } from "formik";
 
@@ -32,11 +31,11 @@ export interface IInputControl {
 
 interface ISliderWithTT {
   sliderValue: number;
-  // setSliderValue: Dispatch<SetStateAction<number>>;
   onChange: (value: number) => void;
   min: number;
   max: number;
 }
+
 function SliderWithTT(props: ISliderWithTT) {
   const [sliderValue] = [props.sliderValue];
   const [showTooltip, setShowTooltip] = useState(false);
@@ -99,6 +98,7 @@ export default function CreateDAOForm({ repo }: ICreateDAOForm) {
       adminPercent: CONFIG.DEFAULT_VALUES.ADMIN_PERCENT,
     },
     validate: (values) => {
+      // Using a dirty hack here `daoTokenName`
       const errors: { [key: string]: string } = {};
       // Valudate the values.
       if (!repo) {
@@ -108,9 +108,19 @@ export default function CreateDAOForm({ repo }: ICreateDAOForm) {
         errors.daoTokenName =
           "Quorom Percentage is not correct please select a value b/w 1 & 20.";
       }
+      if (
+        values.daoTokenName.length < 2 &&
+        values.daoTokenName.length < 2 &&
+        values.daoTokenName.length < 2 &&
+        values.daoTokenName.length < 2
+      ) {
+        errors.daoTokenName =
+          "The token name and symbol should be atleast 2 char long.";
+      }
       return errors;
     },
     onSubmit: (values) => {
+      console.log(values);
       write();
     },
   });
@@ -242,10 +252,22 @@ export default function CreateDAOForm({ repo }: ICreateDAOForm) {
           </Box>
         </Box>
         <Box>
-          <FormLabel>Percent of tokens reserve for admin.</FormLabel>
+          <FormLabel>
+            Percent of tokens reserve for admin.{" "}
+            {"(" +
+              BigNumber.from(formik.values.tokenSupply)
+                .mul(formik.values.adminPercent)
+                .div(BigNumber.from(100))
+                .toString() +
+              " " +
+              formik.values.daoTokenSymbol.toString() +
+              ")"}
+          </FormLabel>
           <SliderWithTT
             sliderValue={formik.values.adminPercent}
-            onChange={formik.handleChange}
+            onChange={(e: number) => {
+              formik.setFieldValue("adminPercent", e);
+            }}
             min={1}
             max={CONFIG.DEFAULT_VALUES.MAX_ADMIN_PERCENT}
           />
