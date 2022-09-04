@@ -43,13 +43,13 @@ export interface PageProps {
     }[];
   };
 }
-export interface IListItem {
+interface IListItem {
   title: string;
   address: string;
   children?: React.ReactNode;
   daoObject: TDAO;
 }
-export const ListItem = (props: IListItem): JSX.Element => {
+const ListItem = (props: IListItem): JSX.Element => {
   const router = useRouter();
   return (
     <Box

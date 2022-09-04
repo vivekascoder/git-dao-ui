@@ -21,33 +21,75 @@ import { fetchAllDAOProposals } from "../../../utils/emvApi";
 import { GetServerSideProps, NextPage } from "next";
 
 interface IDaoPageProps {
-  total: number;
-  page: number;
-  page_size: number;
-  result: {
-    transaction_hash: string;
-    address: string;
-    block_timestamp: string;
-    block_number: string;
-    block_hash: string;
-    data: {
-      proposalId: string;
-      proposer: string;
-      targets: [string];
-      values: [string];
-      signatures: [string];
-      calldatas: [string];
-      startBlock: string;
-      endBlock: string;
-      description: string;
-    };
-  }[];
+  proposals: {
+    total: number;
+    page: number;
+    page_size: number;
+    result: {
+      transaction_hash: string;
+      address: string;
+      block_timestamp: string;
+      block_number: string;
+      block_hash: string;
+      data: {
+        proposalId: string;
+        proposer: string;
+        targets: [string];
+        values: [string];
+        signatures: [string];
+        calldatas: [string];
+        startBlock: string;
+        endBlock: string;
+        description: string;
+      };
+    }[];
+  };
 }
+interface IListItem {
+  title: string;
+  address: string;
+  children?: React.ReactNode;
+}
+const ListItem = (props: IListItem): JSX.Element => {
+  const router = useRouter();
+  return (
+    <Box
+      // display={"flex"}
+      // alignItems={"center"}
+      // justifyContent={"space-between"}
+      boxShadow={"md"}
+      px={10}
+      borderRadius={"md"}
+      py={4}
+    >
+      <Text fontWeight={"bold"}>{props.title}</Text>
+      <Text
+        colorScheme={"blue"}
+        // rightIcon={<ArrowForwardIcon />}
+        size={"sm"}
+        mt={2}
+        display="inline-block"
+        borderBottomWidth={"2px"}
+        borderBottomColor={"transparent"}
+        _hover={{
+          borderBottomWidth: "2px",
+          borderBottomStyle: "dashed",
+          borderBottomColor: "gray.500",
+          cursor: "pointer",
+        }}
+        // onClick={() => {}}
+      >
+        + Read More
+      </Text>
+    </Box>
+  );
+};
 
 const dao: NextPage<IDaoPageProps> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
   // const [totalSupply, setTotalSupply] = useState<string>("");
   const router = useRouter();
+  const { proposals } = props;
 
   // Fetch totalSupply;
   const supplyTx = useContractRead({
@@ -196,6 +238,30 @@ const dao: NextPage<IDaoPageProps> = (props) => {
           {treasuryPercent}%
         </div>
       </Box>
+
+      {/* Box  */}
+      <Box
+        borderTopColor={"gray.200"}
+        borderTopWidth={"2px"}
+        borderTopStyle={"dashed"}
+        mt={4}
+        pt={6}
+      >
+        {/* Sub heading */}
+        <Box>
+          <Heading size={"lg"}>📜 All Proposals</Heading>
+        </Box>
+
+        {/* Proposals div */}
+        <Box mt={4}>
+          {proposals.result.map((proposal) => (
+            <ListItem
+              title={"## " + proposal.data.description}
+              address={proposal.address}
+            />
+          ))}
+        </Box>
+      </Box>
     </PageLayout>
   );
 };
@@ -205,15 +271,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log("> Server side props.");
   if (!context.query["slug"]) {
     console.log(">>> Aint got nothin");
-    return { props: { daos: [] } };
+    return { props: { proposals: [] } };
   }
   const parsedDao = decodeData(context.query["slug"] as string) as TParsedDAO;
-  console.log("Dao", parsedDao.dao);
+  // console.log("Dao", parsedDao.dao);
   const events = await fetchAllDAOProposals(parsedDao.dao);
-  console.log(JSON.stringify(events, null, 2));
+  // console.log(JSON.stringify(events, null, 2));
   return {
     props: {
-      daos: events,
+      proposals: events,
     },
   };
 };
