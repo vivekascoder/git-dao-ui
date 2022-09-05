@@ -11,15 +11,8 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useGlobalStore from "../store";
-import { UserInfo } from "../utils/github";
 import { useRouter } from "next/router";
-
-export type RepoType = {
-  id: number;
-  nodeId: string;
-  fullName: string;
-  isPrivate: boolean;
-};
+import { RepoType, IRepoItem, UserInfo } from "../types";
 
 const filterData = (data: any): RepoType[] =>
   data.map((repo: any) => ({
@@ -88,10 +81,7 @@ function useDebounce<T>(value: T, delay: number): T {
   );
   return debouncedValue;
 }
-interface IRepoItem {
-  repo: RepoType;
-  onClick: (repo: RepoType) => void;
-}
+
 const RepoItem: React.FunctionComponent<IRepoItem> = (props) => {
   return (
     <Box

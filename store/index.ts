@@ -1,9 +1,8 @@
 import create from "zustand";
-import { RepoType } from "../components/GithubRepoSearch";
-import { UserInfo } from "../utils/github";
+import { UserInfo, RepoType } from "../types";
 
 export type OptionalString = string | null;
-interface StoreInterface {
+export interface StoreInterface {
   user: null | UserInfo;
   accessToken: OptionalString;
   selectedRepo: RepoType | null;

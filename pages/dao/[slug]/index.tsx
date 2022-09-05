@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TDAO, TParsedDAO } from "..";
 import CONFIG from "../../../config";
 import PageLayout from "../../../layouts";
 import { decodeData } from "../../../utils";
@@ -19,71 +18,8 @@ import { useContractRead } from "wagmi";
 import { BigNumber, ethers } from "ethers";
 import { fetchAllDAOProposals } from "../../../utils/emvApi";
 import { GetServerSideProps, NextPage } from "next";
-
-interface IDaoPageProps {
-  proposals: {
-    total: number;
-    page: number;
-    page_size: number;
-    result: {
-      transaction_hash: string;
-      address: string;
-      block_timestamp: string;
-      block_number: string;
-      block_hash: string;
-      data: {
-        proposalId: string;
-        proposer: string;
-        targets: [string];
-        values: [string];
-        signatures: [string];
-        calldatas: [string];
-        startBlock: string;
-        endBlock: string;
-        description: string;
-      };
-    }[];
-  };
-}
-interface IListItem {
-  title: string;
-  address: string;
-  children?: React.ReactNode;
-}
-const ListItem = (props: IListItem): JSX.Element => {
-  const router = useRouter();
-  return (
-    <Box
-      // display={"flex"}
-      // alignItems={"center"}
-      // justifyContent={"space-between"}
-      boxShadow={"md"}
-      px={10}
-      borderRadius={"md"}
-      py={4}
-    >
-      <Text fontWeight={"bold"}>{props.title}</Text>
-      <Text
-        colorScheme={"blue"}
-        // rightIcon={<ArrowForwardIcon />}
-        size={"sm"}
-        mt={2}
-        display="inline-block"
-        borderBottomWidth={"2px"}
-        borderBottomColor={"transparent"}
-        _hover={{
-          borderBottomWidth: "2px",
-          borderBottomStyle: "dashed",
-          borderBottomColor: "gray.500",
-          cursor: "pointer",
-        }}
-        // onClick={() => {}}
-      >
-        + Read More
-      </Text>
-    </Box>
-  );
-};
+import { IDaoPageProps, TParsedDAO } from "../../../types";
+import ListItem from "../../../components/ListItem";
 
 const dao: NextPage<IDaoPageProps> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
@@ -258,6 +194,7 @@ const dao: NextPage<IDaoPageProps> = (props) => {
             <ListItem
               title={"## " + proposal.data.description}
               address={proposal.address}
+              onClick={() => {}}
             />
           ))}
         </Box>

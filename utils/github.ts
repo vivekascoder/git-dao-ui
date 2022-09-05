@@ -1,11 +1,7 @@
 // Mainly github api satuff.
 import axios from "axios";
+import { UserInfo } from "../types";
 
-export type UserInfo = {
-  id: number;
-  username: string;
-  avatar: string;
-};
 export const fetchAuthenticatedUser = async (
   accessToken: string
 ): Promise<UserInfo> => {

@@ -7,49 +7,13 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { GetServerSideProps, NextPage } from "next";
 import { encodeData } from "../../utils";
-
+import { IListItem, DAOPageProps, TDAO } from "../../types";
 /**
  * # Goal ?
  * + List all the DAOs created from the contract.
  */
-export type TParsedDAO = {
-  dao: string;
-  daoToken: string;
-  daoTimelock: string;
-  gitDao: string;
-  gitUrl: string;
-  gitId: string;
-  creator: string;
-};
-export type TDAO = {
-  dinfo: [string, string, string, boolean];
-  gitDaoCreator: [string, string];
-  daoTimelock: string;
-  gitUrl: string;
-  gitId: string;
-};
-export interface PageProps {
-  daos: {
-    total: number;
-    page: number;
-    page_size: number;
-    result: {
-      transaction_hash: string;
-      address: string;
-      block_timestamp: string;
-      block_number: string;
-      block_hash: string;
-      data: TDAO;
-    }[];
-  };
-}
-interface IListItem {
-  title: string;
-  address: string;
-  children?: React.ReactNode;
-  daoObject: TDAO;
-}
-const ListItem = (props: IListItem): JSX.Element => {
+
+const ListFlexBox = (props: IListItem): JSX.Element => {
   const router = useRouter();
   return (
     <Box
@@ -68,22 +32,7 @@ const ListItem = (props: IListItem): JSX.Element => {
         borderRadius={"1000px"}
         size={"sm"}
         px={4}
-        onClick={() => {
-          router.push({
-            pathname: "/dao/[slug]",
-            query: {
-              slug: encodeData({
-                dao: props.daoObject.dinfo[2],
-                daoToken: props.daoObject.dinfo[0],
-                daoTimelock: props.daoObject.dinfo[1],
-                gitDao: props.daoObject.gitDaoCreator[0],
-                gitUrl: props.daoObject.gitUrl,
-                gitId: props.daoObject.gitId,
-                creator: props.daoObject.gitDaoCreator[1],
-              }),
-            },
-          });
-        }}
+        onClick={props.onClick}
       >
         Visit
       </Button>
@@ -91,7 +40,24 @@ const ListItem = (props: IListItem): JSX.Element => {
   );
 };
 
-const daos: NextPage<PageProps> = (props) => {
+const daos: NextPage<DAOPageProps> = (props) => {
+  const router = useRouter();
+  const redirectToDaoPage = (daoObject: TDAO) => {
+    router.push({
+      pathname: "/dao/[slug]",
+      query: {
+        slug: encodeData({
+          dao: daoObject.dinfo[2],
+          daoToken: daoObject.dinfo[0],
+          daoTimelock: daoObject.dinfo[1],
+          gitDao: daoObject.gitDaoCreator[0],
+          gitUrl: daoObject.gitUrl,
+          gitId: daoObject.gitId,
+          creator: daoObject.gitDaoCreator[1],
+        }),
+      },
+    });
+  };
   return (
     <PageLayout>
       <Box>
@@ -101,11 +67,13 @@ const daos: NextPage<PageProps> = (props) => {
       </Box>
       <Box experimental_spaceY={3}>
         {props.daos.result.map((d, index) => (
-          <ListItem
+          <ListFlexBox
             key={index}
             title={d.data.gitUrl}
             address={d.data.dinfo[2]}
-            daoObject={d.data}
+            onClick={() => {
+              redirectToDaoPage(d.data);
+            }}
           />
         ))}
       </Box>

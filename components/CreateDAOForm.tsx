@@ -3,38 +3,28 @@ import {
   AlertIcon,
   Box,
   Button,
-  FormControl,
   FormLabel,
   Heading,
   Input,
   Slider,
   SliderFilledTrack,
-  SliderMark,
   SliderThumb,
   SliderTrack,
   Tooltip,
-  UseSliderProps,
   useToast,
 } from "@chakra-ui/react";
 import { ContractInterface, ethers } from "ethers";
-import { Dispatch, SetStateAction, useState } from "react";
-import { usePrepareContractWrite, useContractWrite, useContract } from "wagmi";
+import { useState } from "react";
+import { useContractWrite } from "wagmi";
 import CONFIG from "../config";
 import { BigNumber } from "ethers";
-import { RepoType } from "./GithubRepoSearch";
 import { useFormik } from "formik";
-
-export interface IInputControl {
-  name: string;
-  label: string;
-}
-
-interface ISliderWithTT {
-  sliderValue: number;
-  onChange: (value: number) => void;
-  min: number;
-  max: number;
-}
+import {
+  ISliderWithTT,
+  RepoType,
+  ICreateDAOForm,
+  ICreateDAOFormik,
+} from "../types";
 
 function SliderWithTT(props: ISliderWithTT) {
   const [sliderValue] = [props.sliderValue];
@@ -66,20 +56,6 @@ function SliderWithTT(props: ISliderWithTT) {
       </Tooltip>
     </Slider>
   );
-}
-
-interface ICreateDAOForm {
-  repo: RepoType | null;
-}
-interface ICreateDAOFormik {
-  daoTokenName: string;
-  daoTokenSymbol: string;
-  tokenSupply: number;
-  minDelay: number;
-  quoromPercentage: number;
-  votingPeriod: number;
-  votingDelay: number;
-  adminPercent: number;
 }
 
 export default function CreateDAOForm({ repo }: ICreateDAOForm) {
