@@ -1,20 +1,20 @@
 // /pages/daos.tsx
-import { Box, Button, Heading, Text } from "@chakra-ui/react";
-import PageLayout from "../../layouts";
-import Moralis from "moralis";
-import CONFIG from "../../config";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
+import Moralis from "moralis";
 import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+
+import CONFIG from "../../config";
+import PageLayout from "../../layouts";
+import { DAOPageProps, IListItem, TDAO } from "../../types";
 import { encodeData } from "../../utils";
-import { IListItem, DAOPageProps, TDAO } from "../../types";
 /**
  * # Goal ?
  * + List all the DAOs created from the contract.
  */
 
 const ListFlexBox = (props: IListItem): JSX.Element => {
-  const router = useRouter();
   return (
     <Box
       display={"flex"}
@@ -40,7 +40,7 @@ const ListFlexBox = (props: IListItem): JSX.Element => {
   );
 };
 
-const daos: NextPage<DAOPageProps> = (props) => {
+const DaoIndexPage: NextPage<DAOPageProps> = (props) => {
   const router = useRouter();
   const redirectToDaoPage = (daoObject: TDAO) => {
     router.push({
@@ -80,7 +80,7 @@ const daos: NextPage<DAOPageProps> = (props) => {
     </PageLayout>
   );
 };
-export default daos;
+export default DaoIndexPage;
 
 const options = {
   chain: CONFIG.CHAIN_ID.POLYGON_TESTNET,

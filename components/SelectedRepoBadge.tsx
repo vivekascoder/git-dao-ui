@@ -1,6 +1,5 @@
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { Alert, AlertIcon, Box, IconButton, Text } from "@chakra-ui/react";
-import useGlobalStore from "../store";
+import { Alert, AlertIcon, Text } from "@chakra-ui/react";
+
 import { ISelectedRepoBadge } from "../types";
 
 export default function SelectedRepoBadge({ repo }: ISelectedRepoBadge) {

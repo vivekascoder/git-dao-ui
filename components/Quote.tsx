@@ -9,8 +9,8 @@ export default function Quote() {
       backgroundColor={"whiteAlpha.300"}
     >
       <Text fontSize={"1rem"} fontWeight="medium">
-        We're still in beta please send feedback to @0xStateMachine on twitter,
-        we're happy to have you on our platform.
+        We&apos;re still in beta please send feedback to @0xStateMachine on
+        twitter, we&apos;re happy to have you on our platform.
       </Text>
     </Box>
   );

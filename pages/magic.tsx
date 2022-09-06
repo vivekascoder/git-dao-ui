@@ -1,13 +1,14 @@
 // pages/magic.tsx
 import { Box, Button, Text } from "@chakra-ui/react";
-import PageLayout from "../layouts";
 import Link from "next/link";
-import { GITHUB_AUTH_URL } from "../utils";
-import useGlobalStore from "../store";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-export default function magic() {
+import PageLayout from "../layouts";
+import useGlobalStore from "../store";
+import { GITHUB_AUTH_URL } from "../utils";
+
+export default function MagicPage() {
   const accessToken = useGlobalStore((s) => s.accessToken);
   const user = useGlobalStore((s) => s.user);
   const router = useRouter();

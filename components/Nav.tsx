@@ -1,10 +1,11 @@
 // components/Nav.tsz
 
-import React from "react";
-import { Flex, Spacer, Text } from "@chakra-ui/react";
-import "@rainbow-me/rainbowkit/styles.css";
+import { Flex, Text } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
+import React from "react";
+
+import "@rainbow-me/rainbowkit/styles.css";
 
 export default function Nav() {
   return (

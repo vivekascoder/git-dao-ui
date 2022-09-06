@@ -1,21 +1,26 @@
+import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  filter,
   Input,
   InputGroup,
   InputLeftElement,
   Text,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import useGlobalStore from "../store";
 import { useRouter } from "next/router";
-import { RepoType, IRepoItem, UserInfo } from "../types";
+import { useEffect, useState } from "react";
 
-const filterData = (data: any): RepoType[] =>
-  data.map((repo: any) => ({
+import useGlobalStore from "../store";
+import { IRepoItem, RepoType, UserInfo } from "../types";
+type RawRepo = {
+  id: number;
+  node_id: string;
+  full_name: string;
+  private: boolean;
+};
+const filterData = (data: RawRepo[]): RepoType[] =>
+  data.map((repo: RawRepo) => ({
     id: repo.id,
     nodeId: repo.node_id,
     fullName: repo.full_name,
@@ -106,7 +111,7 @@ const RepoItem: React.FunctionComponent<IRepoItem> = (props) => {
 };
 
 export default function GithubRepoSearch() {
-  const [repos, setRepos] = useState<any>([]);
+  const [repos, setRepos] = useState<RepoType[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searching, setSearching] = useState<boolean>(false);
   const debounceSearchTerm = useDebounce<string>(searchTerm, 1000);
@@ -129,7 +134,7 @@ export default function GithubRepoSearch() {
         setRepos(data);
       })();
     }
-  }, [debounceSearchTerm]);
+  }, [debounceSearchTerm, user, accessToken]);
 
   useEffect(() => {
     async function doo() {
@@ -146,10 +151,9 @@ export default function GithubRepoSearch() {
   return (
     <Box>
       <InputGroup>
-        <InputLeftElement
-          pointerEvents="none"
-          children={<SearchIcon color="gray.300" />}
-        />
+        <InputLeftElement pointerEvents="none">
+          <SearchIcon color="gray.300" />
+        </InputLeftElement>
         <Input
           type="search"
           placeholder="Repository name"

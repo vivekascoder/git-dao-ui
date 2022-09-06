@@ -1,11 +1,11 @@
-import { Box, Text } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Box } from "@chakra-ui/react";
+import { useState } from "react";
+
 import GithubRepoSearch from "../components/GithubRepoSearch";
 import PageLayout from "../layouts";
 import useGlobalStore from "../store";
 
-export default function create() {
+export default function SelectRepoPage() {
   const [repos, setRepos] = useState([]);
   const accessToken = useGlobalStore((s) => s.accessToken);
 

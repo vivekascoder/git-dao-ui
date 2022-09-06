@@ -14,17 +14,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ContractInterface, ethers } from "ethers";
-import { useState } from "react";
-import { useContractWrite } from "wagmi";
-import CONFIG from "../config";
 import { BigNumber } from "ethers";
 import { useFormik } from "formik";
-import {
-  ISliderWithTT,
-  RepoType,
-  ICreateDAOForm,
-  ICreateDAOFormik,
-} from "../types";
+import { useState } from "react";
+import { useContractWrite } from "wagmi";
+
+import CONFIG from "../config";
+import { ICreateDAOForm, ICreateDAOFormik, ISliderWithTT } from "../types";
 
 function SliderWithTT(props: ISliderWithTT) {
   const [sliderValue] = [props.sliderValue];
@@ -104,6 +100,8 @@ export default function CreateDAOForm({ repo }: ICreateDAOForm) {
   const tokenSupplyWithDecimals = BigNumber.from(
     formik.values.tokenSupply || "0"
   ).mul(BigNumber.from(ethers.utils.parseEther("1")));
+
+  // eslint-disable-next-line
   const { data, isLoading, isSuccess, write, error } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: CONFIG.CONTRACTS.DAO_FACTORY,

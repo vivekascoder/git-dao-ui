@@ -1,10 +1,11 @@
-import { Box, Heading, Text, Flex, Button } from "@chakra-ui/react";
-import PageLayout from "../layouts";
-import Quote from "../components/Quote";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { Box, Button,Flex, Heading, Text } from "@chakra-ui/react";
 import Spline from "@splinetool/react-spline";
 import { Application, SPEObject } from "@splinetool/runtime";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import Quote from "../components/Quote";
+import PageLayout from "../layouts";
 
 /**
  *  Responsible for skeleton of the site.

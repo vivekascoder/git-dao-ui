@@ -1,6 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { fetchTokenInfo } from "../../utils";
 import { serialize } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { fetchTokenInfo } from "../../utils";
 
 /**
  * # What is the purpose ?

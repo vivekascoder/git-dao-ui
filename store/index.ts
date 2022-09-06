@@ -1,5 +1,6 @@
 import create from "zustand";
-import { UserInfo, RepoType } from "../types";
+
+import { RepoType, UserInfo } from "../types";
 
 export type OptionalString = string | null;
 export interface StoreInterface {

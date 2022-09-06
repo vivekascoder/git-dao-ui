@@ -1,7 +1,8 @@
 import Moralis from "moralis";
+
 import CONFIG from "../config";
 
-export const fetchAllEvents = () => {};
+// export const fetchAllEvents = () => {};
 
 /**
  * To fetch all the dao proposals.

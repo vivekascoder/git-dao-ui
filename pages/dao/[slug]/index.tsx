@@ -1,27 +1,25 @@
-import { ArrowForwardIcon, InfoOutlineIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
+import { BigNumber, ethers } from "ethers";
+import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import CONFIG from "../../../config";
-import PageLayout from "../../../layouts";
-import { decodeData } from "../../../utils";
 import { useContractRead } from "wagmi";
-import { BigNumber, ethers } from "ethers";
-import { fetchAllDAOProposals } from "../../../utils/emvApi";
-import { GetServerSideProps, NextPage } from "next";
-import { IDaoPageProps, TParsedDAO } from "../../../types";
-import ListItem from "../../../components/ListItem";
 
-const dao: NextPage<IDaoPageProps> = (props) => {
+import ListItem from "@/components/ListItem";
+
+import CONFIG from "@/config";
+import PageLayout from "@/layouts";
+import { fetchAllDAOProposals } from "@/utils/emvApi";
+
+import { decodeData } from "../../../utils";
+
+import { IDaoPageProps, TParsedDAO } from "@/types";
+// import ListItem from "../../../components/ListItem";
+// import ListItem from "../../../components/ListItem";
+
+const MainDaoPage: NextPage<IDaoPageProps> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
   // const [totalSupply, setTotalSupply] = useState<string>("");
   const router = useRouter();
@@ -190,11 +188,14 @@ const dao: NextPage<IDaoPageProps> = (props) => {
 
         {/* Proposals div */}
         <Box mt={4}>
-          {proposals.result.map((proposal) => (
+          {proposals.result.map((proposal, id) => (
             <ListItem
               title={"## " + proposal.data.description}
               address={proposal.address}
-              onClick={() => {}}
+              onClick={() => {
+                console.log("Click");
+              }}
+              key={id}
             />
           ))}
         </Box>
@@ -202,7 +203,7 @@ const dao: NextPage<IDaoPageProps> = (props) => {
     </PageLayout>
   );
 };
-export default dao;
+export default MainDaoPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log("> Server side props.");

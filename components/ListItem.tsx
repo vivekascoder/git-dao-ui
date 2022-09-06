@@ -1,4 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
+
 import { IListItem } from "../types";
 
 const ListItem = (props: IListItem): JSX.Element => {

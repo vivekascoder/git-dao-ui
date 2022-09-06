@@ -17,17 +17,18 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { GetServerSideProps, NextPage } from "next";
-import PageLayout from "../../../layouts";
+import { BigNumber, ContractInterface, ethers } from "ethers";
 import { useFormik } from "formik";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TParsedDAO } from "..";
-import { decodeData } from "../../../utils";
 import { useContractWrite } from "wagmi";
-import { BigNumber, ContractInterface, ethers } from "ethers";
-import CONFIG from "../../../config";
-import { fetchAllDAOProposals } from "../../../utils/emvApi";
+
+import CONFIG from "@/config";
+import PageLayout from "@/layouts";
+import { decodeData } from "@/utils";
+
+import { TParsedDAO } from "@/types";
 
 export const RewardContributorForm = () => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
@@ -75,6 +76,7 @@ export const RewardContributorForm = () => {
     BigNumber.from(ethers.utils.parseEther("1"))
   );
 
+  // eslint-disable-next-line
   const { data, isLoading, isSuccess, write, error } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: parsedDao?.dao || "",
@@ -121,7 +123,7 @@ export const RewardContributorForm = () => {
     <form onSubmit={formik.handleSubmit}>
       <Box experimental_spaceY={4}>
         <FormControl>
-          <FormLabel htmlFor="address">🦄 Contributor's Address</FormLabel>
+          <FormLabel htmlFor="address">🦄 Contributor&apos;s Address</FormLabel>
           <Input
             type="string"
             name="address"
@@ -169,7 +171,7 @@ export const RewardContributorForm = () => {
   );
 };
 
-const create_proposal: NextPage<any> = () => {
+const create_proposal: NextPage = () => {
   return (
     <PageLayout>
       <Box mb={6}>

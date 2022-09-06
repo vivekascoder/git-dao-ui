@@ -1,15 +1,17 @@
 // pages/_app.js
-import React, { useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { AppProps } from "next/app";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { AppProps } from "next/app";
+import React, { useEffect } from "react";
 import { WagmiConfig } from "wagmi";
-import { chains, wagmiClient } from "../utils/wagmi";
+
+import "@/styles/globals.css";
+import "@/styles/piechart.css";
+
+import { fetchAuthenticatedUser } from "@/utils/github";
 
 import useGlobalState from "../store";
-import { fetchAuthenticatedUser } from "../utils/github";
-import "../styles/globals.css";
-import "../styles/piechart.css";
+import { chains, wagmiClient } from "../utils/wagmi";
 
 function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
   const accessToken = useGlobalState((state) => state.accessToken);
@@ -24,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
     } else {
       setAccessToken(matchedData[0]);
     }
-  }, []);
+  }, [setAccessToken]);
   useEffect(() => {
     console.log("> Running to fetch userINfo");
     // Fetch userinfo
@@ -46,7 +48,7 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
       }
     }
     doo();
-  }, [accessToken]);
+  }, [accessToken, setAccessToken, user, setUser]);
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>

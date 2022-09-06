@@ -1,5 +1,5 @@
-// Mainly github api satuff.
 import axios from "axios";
+
 import { UserInfo } from "../types";
 
 export const fetchAuthenticatedUser = async (
