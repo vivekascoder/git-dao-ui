@@ -22,7 +22,7 @@ export default function MagicPage() {
 
   return (
     <PageLayout>
-      <Box>Hey! Let's see the magic</Box>
+      <Box>Hey! Let&apos;s see the magic</Box>
       {!user ? (
         <Link href={GITHUB_AUTH_URL}>
           <Button colorScheme="blue">Login with Github</Button>

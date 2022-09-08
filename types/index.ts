@@ -38,29 +38,31 @@ export interface DAOPageProps {
   };
 }
 
-export interface IDaoPageProps {
+export interface IProposalResult {
+  transaction_hash: string;
+  address: string;
+  block_timestamp: string;
+  block_number: string;
+  block_hash: string;
+  data: {
+    proposalId: string;
+    proposer: string;
+    targets: [string];
+    values: [string];
+    signatures: [string];
+    calldatas: [string];
+    startBlock: string;
+    endBlock: string;
+    description: string;
+  };
+}
+
+export interface IProposal {
   proposals: {
     total: number;
     page: number;
     page_size: number;
-    result: {
-      transaction_hash: string;
-      address: string;
-      block_timestamp: string;
-      block_number: string;
-      block_hash: string;
-      data: {
-        proposalId: string;
-        proposer: string;
-        targets: [string];
-        values: [string];
-        signatures: [string];
-        calldatas: [string];
-        startBlock: string;
-        endBlock: string;
-        description: string;
-      };
-    }[];
+    result: IProposalResult[];
   };
 }
 export interface IListItem {
@@ -74,6 +76,7 @@ export type UserInfo = {
   id: number;
   username: string;
   avatar: string;
+  name: string;
 };
 
 export interface IInputControl {

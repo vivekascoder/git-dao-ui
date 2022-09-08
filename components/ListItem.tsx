@@ -20,7 +20,7 @@ const ListItem = (props: IListItem): JSX.Element => {
           borderBottomColor: "gray.500",
           cursor: "pointer",
         }}
-        // onClick={() => {}}
+        onClick={props.onClick}
       >
         + Read More
       </Text>

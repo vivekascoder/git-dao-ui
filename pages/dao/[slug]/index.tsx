@@ -11,15 +11,12 @@ import ListItem from "@/components/ListItem";
 
 import CONFIG from "@/config";
 import PageLayout from "@/layouts";
+import { decodeData } from "@/utils";
 import { fetchAllDAOProposals } from "@/utils/emvApi";
 
-import { decodeData } from "../../../utils";
+import { IProposal, TParsedDAO } from "@/types";
 
-import { IDaoPageProps, TParsedDAO } from "@/types";
-// import ListItem from "../../../components/ListItem";
-// import ListItem from "../../../components/ListItem";
-
-const MainDaoPage: NextPage<IDaoPageProps> = (props) => {
+const MainDaoPage: NextPage<IProposal> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
   // const [totalSupply, setTotalSupply] = useState<string>("");
   const router = useRouter();
@@ -193,7 +190,13 @@ const MainDaoPage: NextPage<IDaoPageProps> = (props) => {
               title={"## " + proposal.data.description}
               address={proposal.address}
               onClick={() => {
-                console.log("Click");
+                router.push({
+                  pathname: "/dao/[slug]/[proposal]",
+                  query: {
+                    slug: router.query["slug"],
+                    proposal: proposal.data.proposalId,
+                  },
+                });
               }}
               key={id}
             />

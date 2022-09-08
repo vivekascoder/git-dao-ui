@@ -18,37 +18,36 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
   const user = useGlobalState((state) => state.user);
   const setAccessToken = useGlobalState((state) => state.setAccessToken);
   const setUser = useGlobalState((state) => state.setUser);
+  // useEffect(() => {}, [setAccessToken]);
+
   useEffect(() => {
+    // console.log({ accessToken, setAccessToken, user, setUser });
     console.log("> Fetch accessToken");
     const matchedData = document.cookie.match(/(?<=access_token=)\w*/g);
-    if (!matchedData) {
-      setAccessToken(null);
-    } else {
+    if (matchedData) {
       setAccessToken(matchedData[0]);
+      doo(matchedData[0]);
     }
-  }, [setAccessToken]);
-  useEffect(() => {
-    console.log("> Running to fetch userINfo");
-    // Fetch userinfo
-    async function doo() {
-      if (!accessToken) {
-        console.error("No access token.", user, accessToken);
-      } else {
-        try {
-          console.log("Working");
-          const user = await fetchAuthenticatedUser(accessToken);
-          setUser(user);
-        } catch (e) {
-          console.log("Logging out");
-          // Logout the user.
-          setUser(null);
-          document.cookie = "";
-          setAccessToken(null);
-        }
+    // eslint-disable-next-line
+  }, []);
+
+  const doo = async (_accessToken: string) => {
+    if (!_accessToken) {
+      console.error("No access token.", user, _accessToken);
+    } else {
+      try {
+        console.log("Working");
+        const user = await fetchAuthenticatedUser(_accessToken);
+        console.log(user);
+        setUser(user);
+      } catch (e) {
+        console.log("Logging out");
+        // Logout the user.
+        setUser(null);
+        document.cookie = "";
       }
     }
-    doo();
-  }, [accessToken, setAccessToken, user, setUser]);
+  };
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>

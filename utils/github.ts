@@ -14,5 +14,6 @@ export const fetchAuthenticatedUser = async (
     username: data.login,
     id: data.id,
     avatar: data.avatar_url,
+    name: data.name,
   };
 };
