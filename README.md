@@ -78,3 +78,20 @@ emit ProposalCreated(
   description
 );
 ```
+
+## Count the weight of the user.
+
+```
+uint256 weight = getVotes(account, proposal.voteStart.getDeadline());
+```
+
+## Check if the user has already voted.
+
+```
+/**
+  * @dev See {IGovernor-hasVoted}.
+  */
+function hasVoted(uint256 proposalId, address account) public view virtual override returns (bool) {
+    return _proposalVotes[proposalId].hasVoted[account];
+}
+```
