@@ -1,13 +1,11 @@
 import create from "zustand";
 
-import { RepoType, UserInfo } from "../types";
+import { RepoType, } from "../types";
 
 export type OptionalString = string | null;
 export interface StoreInterface {
-  user: null | UserInfo;
   accessToken: OptionalString;
   selectedRepo: RepoType | null;
-  setUser: (u: UserInfo | null) => void;
   setAccessToken: (t: OptionalString) => void;
   setSelectedRepo: (r: RepoType) => void;
 }
@@ -17,7 +15,6 @@ const useGlobalStore = create<StoreInterface>((set) => ({
   accessToken: null,
   selectedRepo: null,
 
-  setUser: (u: UserInfo | null) => set(() => ({ user: u })),
   setAccessToken: (t) => set({ accessToken: t }),
   setSelectedRepo: (r: RepoType) => set({ selectedRepo: r }),
 }));
