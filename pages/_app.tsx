@@ -3,10 +3,13 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { AppProps } from "next/app";
 import React, { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { WagmiConfig } from "wagmi";
 
 import "@/styles/globals.css";
 import "@/styles/piechart.css";
+
+const queryClient = new QueryClient();
 
 import { fetchAuthenticatedUser } from "@/utils/github";
 
@@ -50,11 +53,13 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
   };
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-        <ChakraProvider>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </RainbowKitProvider>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider chains={chains}>
+          <ChakraProvider>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
     </WagmiConfig>
   );
 }
