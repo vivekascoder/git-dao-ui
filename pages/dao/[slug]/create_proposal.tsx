@@ -24,6 +24,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useContractWrite } from "wagmi";
 
+import DaoTokenBalance from "@/components/DaoTokenBalance";
+
 import CONFIG from "@/config";
 import PageLayout from "@/layouts";
 import { decodeData } from "@/utils";
@@ -171,9 +173,27 @@ export const RewardContributorForm = () => {
   );
 };
 
-const create_proposal: NextPage = () => {
+const CreateProposalPage: NextPage = () => {
+  const router = useRouter();
+  const [parsedDao, setParsedDao] = useState<TParsedDAO>();
+
+  useEffect(() => {
+    if (!router.query["slug"]) return;
+    const dao: TParsedDAO = decodeData(
+      router.query["slug"] as string
+    ) as TParsedDAO;
+    setParsedDao(dao);
+  }, [parsedDao, router.query]);
+
+  if (!parsedDao) {
+    return <Box>Loading Dao...</Box>;
+  }
+
   return (
     <PageLayout>
+      <Box position={"fixed"} bottom="3" right={"4"} zIndex="50">
+        <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />
+      </Box>
       <Box mb={6}>
         <Heading textAlign={"center"}>Create Proposal</Heading>
       </Box>
@@ -183,10 +203,17 @@ const create_proposal: NextPage = () => {
           <TabList mb="1em">
             <Tab>🤑 Reward Contributor</Tab>
             <Tab>🏷 Token Sale</Tab>
+            <Tab>👽 Buy Repo</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
               <RewardContributorForm />
+            </TabPanel>
+            <TabPanel>
+              <Text>
+                This feature is <strong>cumming</strong> soon, contact{" "}
+                <strong>@0xStateMachine</strong> on twitter for more info.
+              </Text>
             </TabPanel>
             <TabPanel>
               <Text>
@@ -201,4 +228,4 @@ const create_proposal: NextPage = () => {
   );
 };
 
-export default create_proposal;
+export default CreateProposalPage;

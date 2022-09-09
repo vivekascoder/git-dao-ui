@@ -4,7 +4,7 @@ const CONFIG = {
   },
   SCAN_URL: "https://mumbai.polygonscan.com/address/",
   CONTRACTS: {
-    DAO_FACTORY: "0xBCD2F6aC5c04B6b8C1D3700B8Ae98609FB578830",
+    DAO_FACTORY: "0x33ddc9cD01Be9f68830da11D38E202eA0e1A467f",
   },
   INTERFACES: {
     DAO_FACTORY: require("../public/contracts/DAOFactory.sol/DAOFactory.json"),

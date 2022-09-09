@@ -14,6 +14,11 @@ export default function Nav() {
       py={"4"}
       px={[20, 10]}
       alignItems={"center"}
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      zIndex="60"
     >
       <Link href={"/"}>
         <Text fontWeight={"bold"} fontSize={"1.3rem"} cursor={"pointer"}>

@@ -8,6 +8,7 @@ const User: React.FC<{ user: UserInfo | null }> = (props) => {
   }
   return (
     <Stack
+      background={"white"}
       direction="row"
       spacing={4}
       alignItems={"center"}

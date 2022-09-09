@@ -1,12 +1,13 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Box, Button, Heading, Text } from "@chakra-ui/react";
-import { BigNumber, ethers } from "ethers";
+import { Box, Button, Heading, Text, useToast } from "@chakra-ui/react";
+import { BigNumber, ContractInterface, ethers } from "ethers";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useContractRead } from "wagmi";
+import { useAccount, useContractRead, useContractWrite } from "wagmi";
 
+import DaoTokenBalance from "@/components/DaoTokenBalance";
 import ListItem from "@/components/ListItem";
 
 import CONFIG from "@/config";
@@ -20,7 +21,9 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
   // const [totalSupply, setTotalSupply] = useState<string>("");
   const router = useRouter();
+  const { address } = useAccount();
   const { proposals } = props;
+  const toast = useToast();
 
   // Fetch totalSupply;
   const supplyTx = useContractRead({
@@ -49,8 +52,37 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
 
   const treasuryPercent = treasuryTx.data
     ?.mul(BigNumber.from("100"))
-    .div(supplyTx.data)
+    .div(supplyTx.data || 0)
     .toString();
+
+  const delegateTx = useContractWrite({
+    mode: "recklesslyUnprepared",
+    addressOrName: parsedDao?.daoToken || "",
+    contractInterface: CONFIG.INTERFACES.DAO_TOKEN.abi as ContractInterface,
+    functionName: "delegate",
+    args: [address],
+
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    },
+    onSuccess(data) {
+      toast({
+        title: "Transaction Sent",
+        description: "Hash: " + data.hash,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    },
+  });
 
   useEffect(() => {
     // TODO: If there is issue with the slug (compromised), show error.
@@ -64,6 +96,9 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
 
   return (
     <PageLayout>
+      <Box position={"fixed"} bottom="3" right={"4"} zIndex="50">
+        <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />
+      </Box>
       <Box mb={6}>
         <Heading textAlign={"center"} mb={2}>
           {parsedDao?.gitUrl}
@@ -202,6 +237,25 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
             />
           ))}
         </Box>
+      </Box>
+
+      <Box
+        borderTopColor={"gray.200"}
+        borderTopWidth={"2px"}
+        borderTopStyle={"dashed"}
+        mt={4}
+        pt={6}
+      >
+        <Heading size={"md"}># Delegate to yourself.</Heading>
+        <Button
+          colorScheme={"blue"}
+          mt={4}
+          onClick={() => {
+            delegateTx.write();
+          }}
+        >
+          Delegate
+        </Button>
       </Box>
     </PageLayout>
   );
