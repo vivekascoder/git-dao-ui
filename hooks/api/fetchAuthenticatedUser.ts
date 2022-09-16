@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { UserInfo } from "../types";
+import { UserInfo } from "../../types";
 
 export const fetchAuthenticatedUser = async (
   accessToken: string
