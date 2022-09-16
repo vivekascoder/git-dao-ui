@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+import CONFIG from "@/config";
+
 import PageLayout from "../layouts";
 import useGlobalStore from "../store";
-import { GITHUB_AUTH_URL } from "../utils";
 
 export default function MagicPage() {
   const accessToken = useGlobalStore((s) => s.accessToken);
@@ -24,7 +25,7 @@ export default function MagicPage() {
     <PageLayout>
       <Box>Hey! Let&apos;s see the magic</Box>
       {!user ? (
-        <Link href={GITHUB_AUTH_URL}>
+        <Link href={CONFIG.GITHUB_AUTH_URL}>
           <Button colorScheme="blue">Login with Github</Button>
         </Link>
       ) : (
