@@ -32,6 +32,6 @@ export default async function handler(
       serialize("access_token", token, { path: "/" })
     );
     // Redirecting to the correct page.
-    res.redirect(307, "/create");
+    res.redirect(307, "/select_repo");
   }
 }
