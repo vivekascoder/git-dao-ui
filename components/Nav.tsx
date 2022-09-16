@@ -1,13 +1,17 @@
 // components/Nav.tsz
 
-import { Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
+import CONFIG from "@/config";
+
 export default function Nav() {
+  const router = useRouter();
   return (
     <Flex
       justifyContent={"space-between"}
@@ -25,7 +29,10 @@ export default function Nav() {
           🌈 Git DAO
         </Text>
       </Link>
-      <ConnectButton />
+      <Box display={"flex"} experimental_spaceX={4}>
+        <ConnectButton />
+        <Button onClick={() => router.push(CONFIG.DOCS_URL)}>📚 Docs</Button>
+      </Box>
     </Flex>
   );
 }

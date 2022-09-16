@@ -1,19 +1,15 @@
 import axios from "axios";
 
-export const REDIRECT_URI = `http://localhost:3000/api/authenticate`;
-export const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+import CONFIG from "@/config";
 
 export const fetchTokenInfo = async (code: string) => {
   try {
-    const res = await axios.post(
-      `https://github.com/login/oauth/access_token`,
-      {
-        client_id: process.env.NEXT_PUBLIC_CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-        code: code,
-        redirect_uri: `http://localhost:3000/api/authenticate`,
-      }
-    );
+    const res = await axios.post(CONFIG.ACCESS_TOKEN_URL, {
+      client_id: CONFIG.CLIENT_ID,
+      client_secret: CONFIG.CLIENT_SECRET,
+      code: code,
+      redirect_uri: CONFIG.REDIRECT_URI,
+    });
     const data: string = res.data;
     return { status: true, data: data };
   } catch (e) {
