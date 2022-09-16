@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "update_artifacts": "rm -rf ./public/contracts/ && cp -r $HOME/code/git_dao/artifacts/contracts ./public/",
-    "update_spline": "rm -rf ./public/rocket.spline && cp ~/Downloads/rocket.spline ./public/"
+    "update_spline": "rm -rf ./public/rocket.spline && cp ~/Downloads/rocket.spline ./public/",
+    "docs:dev": "cd ./docs && yarn docs:dev"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",

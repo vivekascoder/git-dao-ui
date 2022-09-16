@@ -244,6 +244,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
         borderTopWidth={"2px"}
         borderTopStyle={"dashed"}
         mt={4}
+        mb={200}
         pt={6}
       >
         <Heading size={"md"}># Delegate to yourself.</Heading>
