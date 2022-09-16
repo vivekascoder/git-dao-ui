@@ -112,3 +112,10 @@ export interface IRepoItem {
   repo: RepoType;
   onClick: (repo: RepoType) => void;
 }
+
+export type RawRepo = {
+  id: number;
+  node_id: string;
+  full_name: string;
+  private: boolean;
+};

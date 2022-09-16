@@ -2,14 +2,16 @@ import { Box } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
 
-import User from "@/components/User";
+import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 
-import useGlobalStore from "@/store";
+import User from "@/components/User";
 
 import Nav from "../components/Nav";
 
+import { UserInfo } from "@/types";
+
 export default function PageLayout(props: React.PropsWithChildren) {
-  const user = useGlobalStore((s) => s.user);
+  const { data: user } = useGetAuthenticatedUser();
   return (
     <Box style={{ minHeight: "100vh" }} px={4}>
       <Box position={"fixed"} bottom="3" left={"4"} zIndex="50">
