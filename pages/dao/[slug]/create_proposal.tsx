@@ -24,6 +24,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useContractWrite } from "wagmi";
 
+import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
 
 import CONFIG from "@/config";
@@ -295,6 +296,9 @@ const CreateProposalPage: NextPage = () => {
     <PageLayout>
       <Box position={"fixed"} bottom="3" right={"4"} zIndex="50">
         <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />
+      </Box>
+      <Box>
+        <Breadcrumbs />
       </Box>
       <Box mb={6}>
         <Heading textAlign={"center"}>Create Proposal</Heading>

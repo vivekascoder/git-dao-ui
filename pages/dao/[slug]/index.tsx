@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAccount, useContractRead, useContractWrite } from "wagmi";
 
+import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
 import ListItem from "@/components/ListItem";
 
@@ -99,6 +100,9 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
     <PageLayout>
       <Box position={"fixed"} bottom="3" right={"4"} zIndex="50">
         <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />
+      </Box>
+      <Box>
+        <Breadcrumbs />
       </Box>
       <Box mb={6}>
         <Heading textAlign={"center"} mb={2}>

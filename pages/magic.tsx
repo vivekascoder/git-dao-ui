@@ -1,9 +1,11 @@
 // pages/magic.tsx
-import { Button, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import Link from "next/link";
 
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
+
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 import CONFIG from "@/config";
 import { getAccessToken } from "@/helpers/getAccessToken";
@@ -14,6 +16,9 @@ export default function MagicPage() {
   const { data: user } = useGetAuthenticatedUser();
   return (
     <PageLayout>
+      <Box>
+        <Breadcrumbs />
+      </Box>
       <Text fontSize={"3xl"} fontWeight={"black"} align="center">
         # Login with github to see 🎩 magic
       </Text>

@@ -5,6 +5,8 @@ import Moralis from "moralis";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 
+import Breadcrumbs from "@/components/Breadcrumbs";
+
 import CONFIG from "../../config";
 import PageLayout from "../../layouts";
 import { DAOPageProps, IListItem, TDAO } from "../../types";
@@ -60,11 +62,15 @@ const DaoIndexPage: NextPage<DAOPageProps> = (props) => {
   };
   return (
     <PageLayout>
+      <Box py={3}>
+        <Breadcrumbs />
+      </Box>
       <Box>
         <Heading textAlign={"center"} mb={6}>
           Created DAOs
         </Heading>
       </Box>
+
       <Box experimental_spaceY={3}>
         {props.daos.result.map((d, index) => (
           <ListFlexBox

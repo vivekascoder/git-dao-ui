@@ -23,6 +23,7 @@ export default function GithubRepoSearch() {
   const { data } = useFetchUserRepositories();
 
   useEffect(() => {
+    console.log("Data >>> ", data);
     if (data) {
       setRepos(data as RepoType[]);
     }

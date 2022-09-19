@@ -18,9 +18,9 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactNode {
   const setAccessToken = useGlobalState((state) => state.setAccessToken);
 
   useEffect(() => {
-    const matchedData = document.cookie.match(/(?<=access_token=)\w*/g);
+    const matchedData = document.cookie.match(/(access_token=)\w*/g);
     if (matchedData) {
-      setAccessToken(matchedData[0]);
+      setAccessToken(matchedData[0].replace("access_token=", ""));
     }
     // eslint-disable-next-line
   }, []);
