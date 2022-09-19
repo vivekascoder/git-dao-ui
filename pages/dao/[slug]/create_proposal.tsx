@@ -181,7 +181,7 @@ interface IBuyTokenFormikInitialValue {
 }
 
 const BuyTokensForm: React.FC = () => {
-  const toast = useToast();
+  // const toast = useToast();
   const formik = useFormik<IBuyTokenFormikInitialValue>({
     initialValues: {
       to: "",

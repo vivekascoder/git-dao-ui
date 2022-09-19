@@ -12,7 +12,7 @@ import PageLayout from "../layouts";
 export default function Home(): React.ReactNode {
   return (
     <PageLayout>
-      <Box mt={"4rem"} position={"relative"}>
+      <Box position={"relative"}>
         <Asset />
         <Heading
           fontSize={"2.4rem"}

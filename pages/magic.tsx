@@ -1,35 +1,35 @@
 // pages/magic.tsx
-import { Box, Button } from "@chakra-ui/react";
+import { Button, HStack, Text } from "@chakra-ui/react";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import Link from "next/link";
 
-import { getAccessToken } from "@/helpers/getAccessToken";
+import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 
 import CONFIG from "@/config";
+import { getAccessToken } from "@/helpers/getAccessToken";
 
 import PageLayout from "../layouts";
 
-import useGlobalStore from "../store";
-
-
 export default function MagicPage() {
+  const { data: user } = useGetAuthenticatedUser();
   return (
     <PageLayout>
-      <Box>Hey! Let&apos;s see the magic</Box>
-
-      <Link href={GITHUB_AUTH_URL}>
-        <Button colorScheme="blue">Login with Github</Button>
-      </Link>
-      {/**
+      <Text fontSize={"3xl"} fontWeight={"black"} align="center">
+        # Login with github to see 🎩 magic
+      </Text>
+      <Text align="center" px="4rem" color={"gray.600"}>
+        Login with Github and see the magic to selecting repo and creating DAO
+        for them. We offer a simple widget to select repo and create DAO for it.
+      </Text>
       {!user ? (
-        <Link href={CONFIG.GITHUB_AUTH_URL}>
-          <Button colorScheme="blue">Login with Github</Button>
-        </Link>
+        <HStack justifyContent={"center"} mt={4}>
+          <Link href={CONFIG.GITHUB_AUTH_URL}>
+            <Button colorScheme="blue">🎩 Login with Github</Button>
+          </Link>
+        </HStack>
       ) : (
-        <Text>User is already logged int</Text>
+        <Text fontSize={"3xl"}>User is already logged int</Text>
       )}
-      <p>Token: {accessToken}</p>
-      **/}
     </PageLayout>
   );
 }

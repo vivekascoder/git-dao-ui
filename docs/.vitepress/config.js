@@ -4,25 +4,26 @@ export default {
   description: "Instant DAOification of your open source repositories.",
 
   themeConfig: {
+    socialLinks: [
+      { icon: "github", link: "https://github.com/vivekascoder/git-dao-ui" },
+      { icon: "twitter", link: "https://twitter.com/0xstatemachine" },
+    ],
     sidebar: [
       {
-        text: "Introduction",
+        text: "🦆 Introduction",
+        collapsible: true,
         items: [
           {
-            text: "Getting Started",
-            link: "/getting-started",
+            text: "📚 Getting Started",
+            link: "/Introduction/getting-started",
           },
           {
-            text: "Terms",
-            link: "/terms/index.md",
+            text: "🐝 Buzz Words",
+            link: "/Introduction/buzzwords.md",
           },
           {
-            text: "Protocol",
-            link: "/protocol",
-          },
-          {
-            text: "Deployments",
-            link: "/deployments",
+            text: "❓ How it works?",
+            link: "/Introduction/how-it-works.md",
           },
         ],
       },

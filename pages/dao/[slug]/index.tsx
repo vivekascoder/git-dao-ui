@@ -19,7 +19,6 @@ import { IProposal, TParsedDAO } from "@/types";
 
 const MainDaoPage: NextPage<IProposal> = (props) => {
   const [parsedDao, setParsedDao] = useState<TParsedDAO | null>();
-  // const [totalSupply, setTotalSupply] = useState<string>("");
   const router = useRouter();
   const { address } = useAccount();
   const { proposals } = props;
@@ -51,9 +50,11 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
     .toString();
 
   const treasuryPercent = treasuryTx.data
-    ?.mul(BigNumber.from("100"))
-    .div(supplyTx.data || 0)
-    .toString();
+    ? treasuryTx.data
+        .mul(BigNumber.from("100"))
+        .div(supplyTx.data || 1)
+        .toString()
+    : 0;
 
   const delegateTx = useContractWrite({
     mode: "recklesslyUnprepared",

@@ -46,7 +46,7 @@ export default function Asset() {
   }
 
   return (
-    <Box mt={"4rem"} position={"relative"}>
+    <Box position={"relative"}>
       <Box height={"40rem"} position={"absolute"} inset={0} zIndex={-20}>
         <Spline scene={"/rocket.spline"} onLoad={onLoad} />
       </Box>

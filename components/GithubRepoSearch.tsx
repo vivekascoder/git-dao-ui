@@ -31,12 +31,13 @@ export default function GithubRepoSearch() {
   const router = useRouter();
 
   return (
-    <Box>
+    <Box p="6">
       <InputGroup>
         <InputLeftElement pointerEvents="none">
           <SearchIcon color="gray.300" />
         </InputLeftElement>
         <Input
+          background={"white"}
           type="search"
           placeholder="Repository name"
           onChange={(e) => {
@@ -54,12 +55,15 @@ export default function GithubRepoSearch() {
 
       {/* List of repos */}
       <Box
-        maxHeight="20rem"
+        maxHeight="30rem"
         overflowY={"scroll"}
         // backgroundColor={"#1a294b"}
-        shadow={"sm"}
-        p={3}
         borderBottomRadius={3}
+        borderBottomWidth={"1px"}
+        borderLeftWidth={"1px"}
+        borderRightWidth={"1px"}
+        mt={-2}
+        pt={2}
       >
         {repos.map((repo: RepoType, id: number) => (
           <RepoItem
@@ -82,9 +86,10 @@ const RepoItem: React.FunctionComponent<IRepoItem> = (props) => {
       display={"flex"}
       alignItems="center"
       justifyContent={"space-between"}
-      py={3}
+      p="4"
+      _hover={{ backgroundColor: "gray.100", cursor: "pointer" }}
     >
-      <Text fontWeight={"semibold"} fontSize="1.2rem">
+      <Text fontWeight={"semibold"} fontSize="1rem">
         {props.repo.fullName}
       </Text>
       <Button
@@ -92,6 +97,7 @@ const RepoItem: React.FunctionComponent<IRepoItem> = (props) => {
         onClick={() => {
           props.onClick(props.repo);
         }}
+        size={"sm"}
       >
         Create
       </Button>

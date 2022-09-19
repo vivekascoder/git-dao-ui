@@ -3,6 +3,8 @@
   font-family: "Cute Aurora";
   src: url(/aurora.ttf);
 }
+
 * {
   font-family: "Cute Aurora" !important;
+  /* outline: 2px solid red; */
 }
