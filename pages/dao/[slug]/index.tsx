@@ -93,7 +93,6 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
       router.query["slug"] as string
     ) as TParsedDAO;
     setParsedDao(dao);
-    console.log(dao);
   }, [router.query]);
 
   return (
@@ -269,15 +268,11 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
 export default MainDaoPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log("> Server side props.");
   if (!context.query["slug"]) {
-    console.log(">>> Aint got nothin");
     return { props: { proposals: [] } };
   }
   const parsedDao = decodeData(context.query["slug"] as string) as TParsedDAO;
-  // console.log("Dao", parsedDao.dao);
   const events = await fetchAllDAOProposals(parsedDao.dao);
-  // console.log(JSON.stringify(events, null, 2));
   return {
     props: {
       proposals: events,

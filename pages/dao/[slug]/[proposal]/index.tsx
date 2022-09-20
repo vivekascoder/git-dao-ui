@@ -27,6 +27,7 @@ import {
   useContractWrite,
 } from "wagmi";
 
+import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
 import RadioCard from "@/components/RadioCard";
 
@@ -276,6 +277,9 @@ const ProposalPage: NextPage<IProposal> = (props) => {
     <PageLayout>
       <Box position={"fixed"} bottom="3" right={"4"} zIndex="50">
         <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />
+      </Box>
+      <Box mb={4}>
+        <Breadcrumbs />
       </Box>
       <Box mt={6}>
         <Heading size={"md"}>{"# 📜 " + proposal.data.description}</Heading>

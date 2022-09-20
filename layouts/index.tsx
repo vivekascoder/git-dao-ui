@@ -7,12 +7,14 @@ import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 import Nav from "@/components/Nav";
 import User from "@/components/User";
 
+import { UserInfo } from "@/types";
+
 export default function PageLayout(props: React.PropsWithChildren) {
   const { data: user } = useGetAuthenticatedUser();
   return (
     <Box style={{ minHeight: "100vh" }}>
       <Box position={"fixed"} bottom="3" left={"4"} zIndex="50">
-        <User user={user} />
+        <User user={user as UserInfo} />
       </Box>
       <Head>
         <title>Git DAO</title>
