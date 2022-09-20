@@ -98,7 +98,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
   return (
     <PageLayout>
       <Box position={"fixed"} bottom="3" right={"4"} zIndex="50">
-        <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />
+        {parsedDao && <DaoTokenBalance tokenAddress={parsedDao?.daoToken} />}
       </Box>
       <Box>
         <Breadcrumbs />

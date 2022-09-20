@@ -10,7 +10,8 @@ const DaoTokenBalance: React.FC<IDaoTokenBalanceProps> = ({ tokenAddress }) => {
   // const token = useToken({ address: tokenAddress });
   const balance = useBalance({ addressOrName: address, token: tokenAddress });
   // console.log(address, token.data, balance.data);
-  return (
+
+  return balance.data ? (
     <Stack
       background={"white"}
       direction="row"
@@ -24,10 +25,11 @@ const DaoTokenBalance: React.FC<IDaoTokenBalanceProps> = ({ tokenAddress }) => {
       borderRadius={"full"}
     >
       <Text>
-        🤑: {balance.data ? balance.data?.formatted : 0}{" "}
-        <strong>${balance.data ? balance.data.symbol : "Token"}</strong>
+        🤑: {balance.data.formatted} <strong>${balance.data.symbol}</strong>
       </Text>
     </Stack>
+  ) : (
+    <Stack></Stack>
   );
 };
 
