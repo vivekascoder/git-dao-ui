@@ -4,7 +4,6 @@ import { filterData } from "@/helpers/filterData";
 
 import { RepoType } from "@/types";
 
-
 export const fetchUserRepositories = async (
   accessToken: string
 ): Promise<RepoType[]> => {
@@ -13,6 +12,7 @@ export const fetchUserRepositories = async (
     {
       headers: {
         Authorization: `token ${accessToken}`,
+        // per_page: 100,
       },
     }
   );

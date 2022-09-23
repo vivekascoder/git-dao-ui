@@ -85,9 +85,9 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
       });
     },
   });
+  console.log(parsedDao);
 
   useEffect(() => {
-    // TODO: If there is issue with the slug (compromised), show error.
     if (!router.query["slug"]) return;
     const dao: TParsedDAO = decodeData(
       router.query["slug"] as string

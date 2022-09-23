@@ -14,7 +14,7 @@ export default function Nav() {
     <Flex
       justifyContent={"space-between"}
       py={"4"}
-      px={[20, 10]}
+      px={[2, 10, 20]}
       alignItems={"center"}
       position="fixed"
       top={0}

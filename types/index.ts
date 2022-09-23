@@ -119,3 +119,10 @@ export type RawRepo = {
   full_name: string;
   private: boolean;
 };
+
+export interface IBuyTokenFormikInitialValue {
+  to: string;
+  tokenAmount: number;
+  price: number;
+  erc20: string;
+}

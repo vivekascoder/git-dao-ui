@@ -44,7 +44,7 @@ export default function Home(): React.ReactNode {
             <Button colorScheme="purple">⚖️ See DAOs</Button>
           </Link>
         </Flex>
-        <Box mt={20}>
+        <Box mt={20} mx={4}>
           <Quote />
         </Box>
       </Box>

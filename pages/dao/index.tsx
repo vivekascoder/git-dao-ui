@@ -11,10 +11,6 @@ import CONFIG from "../../config";
 import PageLayout from "../../layouts";
 import { DAOPageProps, IListItem, TDAO } from "../../types";
 import { encodeData } from "../../utils";
-/**
- * # Goal ?
- * + List all the DAOs created from the contract.
- */
 
 const ListFlexBox = (props: IListItem): JSX.Element => {
   return (
@@ -100,8 +96,6 @@ const options = {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   await Moralis.start({ apiKey: process.env.NEXT_PUBLIC_MORALIS_WEB3_API_KEY });
-  // const data = await Moralis.Web3API.native.getContractEvents(options);
-
   const events = await Moralis.EvmApi.native.getContractEvents(options);
   return {
     props: {
