@@ -1,3 +1,35 @@
+/*
+# How to use it ?
+
+## Component / Next Page:
+Use a hook to reset state of modal.
+
+```ts
+  useEffect(() => {
+    resetTxModal();
+  }, []);
+```
+
+Another hook to change the state of confirmation and other stuff.
+
+```ts
+  useEffect(() => {
+    setTxHash(delegateTx.data?.hash || "");
+    setTxConfirmed(delegateTxConfirmation.isSuccess);
+  }, [delegateTx.data, delegateTxConfirmation, setTxHash, setTxConfirmed]);
+
+Use useWaitForTransaction with useContractWrite.
+
+```ts
+  const delegateTx = useContractWrite({...});
+  const delegateTxConfirmation = useWaitForTransaction({
+    hash: delegateTx.data?.hash,
+  });
+```
+
+That's it have fun.
+*/
+
 import { CheckIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -17,7 +49,6 @@ import useGlobalStore from "@/store";
 
 import CONFIG from "@/config";
 
-// Transaction Confirmation Modal
 const TransactionModal: React.FC = () => {
   const [data, toggleTxModal] = useGlobalStore((s) => [
     s.txModal,
