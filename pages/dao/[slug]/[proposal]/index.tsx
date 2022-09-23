@@ -221,12 +221,12 @@ const ProposalPage: NextPage<IProposal> = (props) => {
         mt={"2"}
       >
         <PrettyLink
-          href={CONFIG.SCAN_URL + parsedDao?.creator}
+          href={CONFIG.SCAN_URL + "address/" + parsedDao?.creator}
           title="DAO:"
           content={parsedDao ? parsedDao.gitUrl : ""}
         />
         <PrettyLink
-          href={CONFIG.SCAN_URL + proposal.data.proposer}
+          href={CONFIG.SCAN_URL + "address/" + proposal.data.proposer}
           title="Proposer:"
           content={
             proposal.data.proposer.slice(0, 4) +

@@ -4,13 +4,20 @@ import { BigNumber, ContractInterface, ethers } from "ethers";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAccount, useContractRead, useContractWrite } from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 
 import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
 import ListItem from "@/components/ListItem";
 import PrettyLink from "@/components/PrettyLink";
 import TreasuryStats from "@/components/TreasuryStats";
+
+import useGlobalStore from "@/store";
 
 import CONFIG from "@/config";
 import PageLayout from "@/layouts";
@@ -25,6 +32,14 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
   const { address } = useAccount();
   const { proposals } = props;
   const toast = useToast();
+  const setTxHash = useGlobalStore((s) => s.setTxHash);
+  const setTxConfirmed = useGlobalStore((s) => s.setTxConfirmed);
+  const toggleTxModal = useGlobalStore((s) => s.toggleTxModal);
+  const resetTxModal = useGlobalStore((s) => s.resetTxModal);
+
+  useEffect(() => {
+    resetTxModal();
+  }, []);
 
   // Fetch totalSupply;
   const supplyTx = useContractRead({
@@ -78,7 +93,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
     onSuccess(data) {
       toast({
         title: "Transaction Sent",
-        description: "Hash: " + data.hash,
+        description: data.hash,
         status: "success",
         duration: 9000,
         isClosable: true,
@@ -86,8 +101,16 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
       });
     },
   });
-  console.log(parsedDao);
 
+  // TODO: Better way to do this ?
+  const delegateTxConfirmation = useWaitForTransaction({
+    hash: delegateTx.data?.hash,
+  });
+
+  useEffect(() => {
+    setTxHash(delegateTx.data?.hash || "");
+    setTxConfirmed(delegateTxConfirmation.isSuccess);
+  }, [delegateTx.data, delegateTxConfirmation, setTxHash, setTxConfirmed]);
   useEffect(() => {
     if (!router.query["slug"]) return;
     const dao: TParsedDAO = decodeData(
@@ -114,7 +137,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
           alignItems={"center"}
         >
           <PrettyLink
-            href={CONFIG.SCAN_URL + parsedDao?.dao}
+            href={CONFIG.SCAN_URL + "address/" + parsedDao?.dao}
             title="DAO:"
             content={
               parsedDao?.dao.slice(0, 4) +
@@ -123,7 +146,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
             }
           />
           <PrettyLink
-            href={CONFIG.SCAN_URL + parsedDao?.creator}
+            href={CONFIG.SCAN_URL + "address/" + parsedDao?.creator}
             title="Creator:"
             content={
               parsedDao?.dao.slice(0, 4) +
@@ -203,6 +226,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
           mt={4}
           onClick={() => {
             delegateTx.write();
+            toggleTxModal();
           }}
         >
           Delegate
@@ -215,6 +239,7 @@ export default MainDaoPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!context.query["slug"]) {
+    // TODO: return currect value.
     return { props: { proposals: [] } };
   }
   const parsedDao = decodeData(context.query["slug"] as string) as TParsedDAO;

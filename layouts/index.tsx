@@ -4,6 +4,7 @@ import React from "react";
 
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 
+import TransactionModal from "@/components/Modals/Transaction";
 import Nav from "@/components/Nav";
 import User from "@/components/User";
 
@@ -16,6 +17,7 @@ export default function PageLayout(props: React.PropsWithChildren) {
       <Box position={"fixed"} bottom="3" left={"4"} zIndex="50">
         <User user={user as UserInfo} />
       </Box>
+      <TransactionModal />
       <Head>
         <title>Git DAO</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

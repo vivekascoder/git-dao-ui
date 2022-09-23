@@ -18,7 +18,7 @@ const INFO = {
   CHAIN_ID: {
     POLYGON_TESTNET: "0x13881",
   },
-  SCAN_URL: "https://mumbai.polygonscan.com/address/",
+  SCAN_URL: "https://mumbai.polygonscan.com/",
   DOCS_URL:
     process.env.NODE_ENV === "production"
       ? "https://docs.gitdao.app"
