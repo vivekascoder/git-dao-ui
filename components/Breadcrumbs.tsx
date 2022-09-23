@@ -4,13 +4,15 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-const convertBreadcrumb = (string: string) => {
-  return string
-    .replace(/-/g, " ")
-    .replace(/oe/g, "ö")
-    .replace(/ae/g, "ä")
-    .replace(/ue/g, "ü")
-    .toUpperCase();
+const remap: { [key: string]: string } = {
+  "[slug]": "Dashboard",
+  create_proposal: "Create Proposal",
+  dao: "Dao",
+};
+
+const filterBread = (bread: string): string => {
+  bread = Object.keys(remap).includes(bread) ? remap[bread] : bread;
+  return bread.slice(0);
 };
 
 const Breadcrumbs = () => {
@@ -26,11 +28,11 @@ const Breadcrumbs = () => {
 
       const pathArray = linkPath.map((path, i) => {
         return {
-          breadcrumb: router.pathname.split("/")[i + 1],
+          breadcrumb: filterBread(router.pathname.split("/")[i + 1]),
           href: "/" + linkPath.slice(0, i + 1).join("/"),
         };
       });
-      pathArray.unshift({ breadcrumb: "home", href: "/" });
+      pathArray.unshift({ breadcrumb: "Home", href: "/" });
       setCrumbs(pathArray);
     }
   }, [router]);
