@@ -19,8 +19,8 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import { useContractWrite } from "wagmi";
 
-import CONFIG from "../config";
-import { ICreateDAOForm, ICreateDAOFormik, ISliderWithTT } from "../types";
+import CONFIG from "../../config";
+import { ICreateDAOForm, ICreateDAOFormik, ISliderWithTT } from "../../types";
 
 function SliderWithTT(props: ISliderWithTT) {
   const [sliderValue] = [props.sliderValue];

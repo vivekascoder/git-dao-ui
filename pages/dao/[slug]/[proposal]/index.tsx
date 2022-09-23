@@ -3,21 +3,13 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Heading,
-  HStack,
   Progress,
   Text,
-  Textarea,
-  useRadioGroup,
   useToast,
 } from "@chakra-ui/react";
 import { BigNumber, ContractInterface, ethers } from "ethers";
-import { useFormik } from "formik";
 import { GetServerSideProps, NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import {
@@ -29,7 +21,8 @@ import {
 
 import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
-import RadioCard from "@/components/RadioCard";
+import VoteForm from "@/components/Forms/Vote";
+import PrettyLink from "@/components/PrettyLink";
 
 import CONFIG from "@/config";
 import PageLayout from "@/layouts";
@@ -57,17 +50,6 @@ const ProposalPage: NextPage<IProposal> = (props) => {
     ) as TParsedDAO;
     setParsedDao(dao);
   }, [proposal, router.query, props.proposals.result]);
-
-  const options = ["against", "for", "abstain"];
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "voteType",
-    defaultValue: options[1],
-    onChange: (v: string) => {
-      formik.setFieldValue("voteType", v);
-    },
-  });
-  const group = getRootProps();
 
   const { address } = useAccount();
 
@@ -113,63 +95,9 @@ const ProposalPage: NextPage<IProposal> = (props) => {
   //   ? proposalVotes.data[0].toString()
   //   : "0";
 
-  // Formik to handle the form.
-  const formik = useFormik<{ message: string; voteType: string }>({
-    initialValues: {
-      message: "",
-      voteType: options[1],
-    },
-    validate(values) {
-      const errors: { [key: string]: string } = {};
-      if (values.message.length < 3) {
-        errors.message = "Message should be atleast 3 char long.";
-      }
-      return errors;
-    },
-    onSubmit(values) {
-      console.log(values);
-      write();
-    },
-  });
-
   /**
    * WAGMI WRITE CONTRACT HOOKS
    */
-
-  // Wagmi hook to cast a vote.
-  const { data, isLoading, isSuccess, write, error } = useContractWrite({
-    mode: "recklesslyUnprepared",
-    addressOrName: parsedDao?.dao || "",
-    contractInterface: CONFIG.INTERFACES.DAO.abi as ContractInterface,
-    functionName: "castVoteWithReason",
-    args: [
-      proposal?.data.proposalId,
-      options.indexOf(formik.values.voteType),
-      formik.values.message,
-    ],
-
-    onError: (error) => {
-      console.log(error.message);
-      toast({
-        title: "Error",
-        description: error.message || "Something went wrong.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    },
-    onSuccess(data) {
-      toast({
-        title: "Transaction Sent",
-        description: "Hash: " + data.hash,
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    },
-  });
 
   const queueTx = useContractWrite({
     mode: "recklesslyUnprepared",
@@ -292,68 +220,25 @@ const ProposalPage: NextPage<IProposal> = (props) => {
         alignItems={"center"}
         mt={"2"}
       >
-        <Link href={CONFIG.SCAN_URL + parsedDao?.creator}>
-          <Box
-            display={"inline-block"}
-            borderBottomWidth={"2px"}
-            borderBottomColor={"transparent"}
-            _hover={{
-              borderBottomWidth: "2px",
-              borderBottomStyle: "dashed",
-              borderBottomColor: "gray.500",
-              cursor: "pointer",
-            }}
-          >
-            <Box display={"flex"} alignItems="center" experimental_spaceX={2}>
-              {/* <InfoOutlineIcon color={"gray.500"} /> */}
-              <Text>
-                <strong>DAO:</strong>
-              </Text>
-              <Text textColor={"gray.500"} size={"xs"}>
-                {parsedDao?.gitUrl}
-              </Text>
-            </Box>
-          </Box>
-        </Link>
-
-        <Link href={CONFIG.SCAN_URL + proposal.data.proposer}>
-          <Box
-            display={"inline-block"}
-            borderBottomWidth={"2px"}
-            borderBottomColor={"transparent"}
-            _hover={{
-              borderBottomWidth: "2px",
-              borderBottomStyle: "dashed",
-              borderBottomColor: "gray.500",
-              cursor: "pointer",
-            }}
-          >
-            <Box display={"flex"} alignItems="center" experimental_spaceX={2}>
-              {/* <InfoOutlineIcon color={"gray.500"} /> */}
-              <Text>
-                <strong>Proposer:</strong>
-              </Text>
-              <Text textColor={"gray.500"} size={"xs"}>
-                {proposal.data.proposer.slice(0, 4) +
-                  "..." +
-                  proposal.data.proposer.slice(
-                    proposal.data.proposer.length - 4
-                  )}
-              </Text>
-            </Box>
-          </Box>
-        </Link>
+        <PrettyLink
+          href={CONFIG.SCAN_URL + parsedDao?.creator}
+          title="DAO:"
+          content={parsedDao ? parsedDao.gitUrl : ""}
+        />
+        <PrettyLink
+          href={CONFIG.SCAN_URL + proposal.data.proposer}
+          title="Proposer:"
+          content={
+            proposal.data.proposer.slice(0, 4) +
+            "..." +
+            proposal.data.proposer.slice(proposal.data.proposer.length - 4)
+          }
+        />
       </Box>
 
-      {/**
-       * place to show progress bars for vote / voting period.
-       */}
       <Box
         mt={14}
         pt={4}
-        // display={"flex"}
-        // justifyContent="space-between"
-        // alignItems={"center"}
         borderTopWidth="2px"
         borderTopStyle={"dashed"}
         borderTopColor="gray.400"
@@ -434,43 +319,10 @@ const ProposalPage: NextPage<IProposal> = (props) => {
         </Heading>
 
         {!hasVoted.data ? (
-          <Box>
-            <form onSubmit={formik.handleSubmit}>
-              <Box experimental_spaceY={3}>
-                <FormControl mt="4">
-                  <FormLabel htmlFor="message">
-                    🦄 Description for your vote.
-                  </FormLabel>
-                  <Textarea
-                    name="message"
-                    value={formik.values.message}
-                    onChange={formik.handleChange}
-                  />
-                  <FormHelperText>
-                    {formik.errors.message ? "" + formik.errors.message : ""}
-                  </FormHelperText>
-                </FormControl>
-                <FormControl mt={3} mb={6}>
-                  <Text mb={1}>🗃 Vote Type:</Text>
-                  <HStack {...group}>
-                    {options.map((value) => {
-                      const radio = getRadioProps({ value });
-                      return (
-                        <RadioCard key={value} {...radio}>
-                          {value}
-                        </RadioCard>
-                      );
-                    })}
-                  </HStack>
-                </FormControl>
-                <Box>
-                  <Button type="submit" colorScheme={"blue"}>
-                    🗳 Vote
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          </Box>
+          <VoteForm
+            proposalId={proposal.data.proposalId}
+            dao={parsedDao?.dao || ""}
+          />
         ) : (
           <Box>
             <Text>You&apos;ve already voted so you can&apos;t vote again.</Text>

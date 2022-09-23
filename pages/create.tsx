@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-import CreateDAOForm from "../components/CreateDAOForm";
+import CreateDAOForm from "../components/Forms/CreateDAO";
 import SelectedRepoBadge from "../components/SelectedRepoBadge";
 import PageLayout from "../layouts";
 import useGlobalStore from "../store";

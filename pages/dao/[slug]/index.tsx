@@ -1,8 +1,7 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Box, Button, Heading, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Heading, useToast } from "@chakra-ui/react";
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import { GetServerSideProps, NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAccount, useContractRead, useContractWrite } from "wagmi";
@@ -10,6 +9,8 @@ import { useAccount, useContractRead, useContractWrite } from "wagmi";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
 import ListItem from "@/components/ListItem";
+import PrettyLink from "@/components/PrettyLink";
+import TreasuryStats from "@/components/TreasuryStats";
 
 import CONFIG from "@/config";
 import PageLayout from "@/layouts";
@@ -39,7 +40,7 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
     contractInterface: CONFIG.INTERFACES.DAO_TOKEN.abi,
     functionName: "symbol",
   });
-  const symbol = symbolTx.data;
+  const symbol = symbolTx.data ? symbolTx.data.toString() : "";
   const treasuryTx = useContractRead({
     addressOrName: parsedDao?.daoToken || "",
     contractInterface: CONFIG.INTERFACES.DAO_TOKEN.abi,
@@ -112,57 +113,24 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
           justifyContent="space-between"
           alignItems={"center"}
         >
-          <Link href={CONFIG.SCAN_URL + parsedDao?.creator}>
-            <Box
-              display={"inline-block"}
-              borderBottomWidth={"2px"}
-              borderBottomColor={"transparent"}
-              _hover={{
-                borderBottomWidth: "2px",
-                borderBottomStyle: "dashed",
-                borderBottomColor: "gray.500",
-                cursor: "pointer",
-              }}
-            >
-              <Box display={"flex"} alignItems="center" experimental_spaceX={2}>
-                {/* <InfoOutlineIcon color={"gray.500"} /> */}
-                <Text>
-                  <strong>DAO:</strong>
-                </Text>
-                <Text textColor={"gray.500"} size={"xs"}>
-                  {parsedDao?.dao.slice(0, 4) +
-                    "..." +
-                    parsedDao?.dao.slice(parsedDao?.creator.length - 4)}
-                </Text>
-              </Box>
-            </Box>
-          </Link>
-
-          <Link href={CONFIG.SCAN_URL + parsedDao?.creator}>
-            <Box
-              display={"inline-block"}
-              borderBottomWidth={"2px"}
-              borderBottomColor={"transparent"}
-              _hover={{
-                borderBottomWidth: "2px",
-                borderBottomStyle: "dashed",
-                borderBottomColor: "gray.500",
-                cursor: "pointer",
-              }}
-            >
-              <Box display={"flex"} alignItems="center" experimental_spaceX={2}>
-                {/* <InfoOutlineIcon color={"gray.500"} /> */}
-                <Text>
-                  <strong>Creator:</strong>
-                </Text>
-                <Text textColor={"gray.500"} size={"xs"}>
-                  {parsedDao?.creator.slice(0, 4) +
-                    "..." +
-                    parsedDao?.creator.slice(parsedDao?.creator.length - 4)}
-                </Text>
-              </Box>
-            </Box>
-          </Link>
+          <PrettyLink
+            href={CONFIG.SCAN_URL + parsedDao?.dao}
+            title="DAO:"
+            content={
+              parsedDao?.dao.slice(0, 4) +
+              "..." +
+              parsedDao?.dao.slice(parsedDao?.dao.length - 4)
+            }
+          />
+          <PrettyLink
+            href={CONFIG.SCAN_URL + parsedDao?.creator}
+            title="Creator:"
+            content={
+              parsedDao?.dao.slice(0, 4) +
+              "..." +
+              parsedDao?.dao.slice(parsedDao?.creator.length - 4)
+            }
+          />
         </Box>
       </Box>
       <Box>
@@ -180,34 +148,12 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
           Create new proposal
         </Button>
       </Box>
-      <Box display="flex" mt={4}>
-        <Box flexGrow={"1"}>
-          <Heading size={"md"} mb={2} mt={6}>
-            # 💵 Treasury Stats
-          </Heading>
-          <Text>
-            + Total Supply: <strong>{tokenSupply + " " + symbol}</strong>
-          </Text>
-          <Text>
-            + Treasury Balance:{" "}
-            <strong>{treasuryBalance + " " + symbol}</strong>
-          </Text>
-          <Text>
-            + Percentage of total supply in treasury:{" "}
-            <strong>{treasuryPercent + "%"}</strong>
-          </Text>
-        </Box>
-        <div
-          className="pie"
-          // style={{ "--p": "60", "--c": "darkblue", "--b": "10px" }}
-          // @ts-ignore
-          style={{ "--p": treasuryPercent }}
-          data-size="50"
-        >
-          {" "}
-          {treasuryPercent}%
-        </div>
-      </Box>
+      <TreasuryStats
+        tokenSupply={tokenSupply}
+        tokenSymbol={symbol}
+        treasuryBalance={treasuryBalance}
+        treasuryPercent={treasuryPercent}
+      />
 
       {/* Box  */}
       <Box
