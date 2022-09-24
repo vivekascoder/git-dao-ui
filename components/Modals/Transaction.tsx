@@ -80,7 +80,7 @@ const TransactionModal: React.FC = () => {
               {data.confirmed
                 ? "Transaction confirmed."
                 : "Waiting for the transaction to be confirmed. Please wait for a while."}{" "}
-              Check your transaction on block explorer.
+              {data.txHash && "Check your transaction on block explorer."}
             </Text>
             {data.txHash && (
               <Link href={CONFIG.SCAN_URL + "tx/" + data.txHash} isExternal>

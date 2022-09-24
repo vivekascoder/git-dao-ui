@@ -35,11 +35,6 @@ const MainDaoPage: NextPage<IProposal> = (props) => {
   const setTxHash = useGlobalStore((s) => s.setTxHash);
   const setTxConfirmed = useGlobalStore((s) => s.setTxConfirmed);
   const toggleTxModal = useGlobalStore((s) => s.toggleTxModal);
-  const resetTxModal = useGlobalStore((s) => s.resetTxModal);
-
-  useEffect(() => {
-    resetTxModal();
-  }, []);
 
   // Fetch totalSupply;
   const supplyTx = useContractRead({

@@ -1,6 +1,8 @@
 // Main page for a single proposal.
 
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Heading,
@@ -60,12 +62,15 @@ const ProposalPage: NextPage<IProposal> = (props) => {
     functionName: "proposalVotes",
     args: [router.query["proposal"]],
   });
-  const getWeight = useContractRead({
-    addressOrName: parsedDao?.dao || "",
-    contractInterface: CONFIG.INTERFACES.DAO.abi,
-    functionName: "getVotes",
-    args: [address, proposal?.data.startBlock],
-  });
+
+  // Get Weight Tranasction
+  // const getWeight = useContractRead({
+  //   addressOrName: parsedDao?.dao || "",
+  //   contractInterface: CONFIG.INTERFACES.DAO.abi,
+  //   functionName: "getVotes",
+  //   args: [address, proposal?.data.startBlock],
+  // });
+
   const hasVoted = useContractRead({
     addressOrName: parsedDao?.dao || "",
     contractInterface: CONFIG.INTERFACES.DAO.abi,
@@ -78,10 +83,17 @@ const ProposalPage: NextPage<IProposal> = (props) => {
     functionName: "quorum",
     args: [proposal?.data.startBlock],
   });
-  console.log(
-    "Proposal Votes",
-    proposalVotes.data ? proposalVotes.data[1].toString() : "nope"
-  );
+  const proposalStateTx = useContractRead({
+    addressOrName: parsedDao?.dao || "",
+    contractInterface: CONFIG.INTERFACES.DAO.abi,
+    functionName: "state",
+    args: [proposal?.data.proposalId],
+  });
+  const proposalState =
+    CONFIG.PROPOSAL_STATE[
+      proposalStateTx.data ? (proposalStateTx.data as unknown as number) : 0
+    ];
+
   const quorumTotalToken: BigNumber = quorumTx.data
     ? (quorumTx.data as any)
     : BigNumber.from(1);
@@ -91,9 +103,6 @@ const ProposalPage: NextPage<IProposal> = (props) => {
   const forVotes: BigNumber = proposalVotes.data
     ? proposalVotes.data[1]
     : BigNumber.from("0");
-  // const abstainVote = proposalVotes.data
-  //   ? proposalVotes.data[0].toString()
-  //   : "0";
 
   /**
    * WAGMI WRITE CONTRACT HOOKS
@@ -173,26 +182,6 @@ const ProposalPage: NextPage<IProposal> = (props) => {
     },
   });
 
-  console.log(
-    // Math.floor(
-    //   (blockNumber.data - parseInt(proposal.data.startBlock)) /
-    //     (parseInt(proposal.data.endBlock) -
-    //       parseInt(proposal.data.startBlock))
-    // ),
-    {
-      bn: blockNumber?.data,
-      proposal: proposal?.data,
-    }
-  );
-  console.log(
-    "val",
-    Math.floor(
-      parseInt(
-        forVotes.div(quorumTotalToken).mul(BigNumber.from(100)).toString()
-      )
-    )
-  );
-
   // Render
   if (!proposal) {
     return <Box>Loading proposal...</Box>;
@@ -208,6 +197,16 @@ const ProposalPage: NextPage<IProposal> = (props) => {
       </Box>
       <Box mb={4}>
         <Breadcrumbs />
+      </Box>
+
+      <Box my={8}>
+        <Alert
+          status={CONFIG.PROPOSAL_ALERT_INFO[proposalState][0]}
+          variant="top-accent"
+        >
+          <AlertIcon />
+          {CONFIG.PROPOSAL_ALERT_INFO[proposalState][1]}
+        </Alert>
       </Box>
       <Box mt={6}>
         <Heading size={"md"}>{"# 📜 " + proposal.data.description}</Heading>
@@ -346,14 +345,26 @@ const ProposalPage: NextPage<IProposal> = (props) => {
           creating the DAO which represents the min. time the proposal needs to
           wait after getting into queue to be executed.
         </Text>
-        <Button
-          colorScheme={"blue"}
-          onClick={() => {
-            queueTx.write();
-          }}
-        >
-          🦆 Queue
-        </Button>
+
+        {proposalState === "Queued" ||
+        proposalState === "Executed" ||
+        proposalState === "Canceled" ||
+        proposalState === "Defeated" ||
+        proposalState === "Expired" ||
+        proposalState === "Pending" ? (
+          <Text>
+            <strong>The proposal is already {proposalState}.</strong>
+          </Text>
+        ) : (
+          <Button
+            colorScheme={"blue"}
+            onClick={() => {
+              queueTx.write();
+            }}
+          >
+            🦆 Queue
+          </Button>
+        )}
       </Box>
       <Box
         mt={14}
@@ -371,14 +382,24 @@ const ProposalPage: NextPage<IProposal> = (props) => {
           proposal by click on the following button and it will execute the
           proposal for you.
         </Text>
-        <Button
-          colorScheme={"green"}
-          onClick={() => {
-            executeTx.write();
-          }}
-        >
-          ✅ Execute
-        </Button>
+        {proposalState === "Executed" ||
+        proposalState === "Canceled" ||
+        proposalState === "Defeated" ||
+        proposalState === "Expired" ||
+        proposalState === "Pending" ? (
+          <Text>
+            <strong>The proposal is already {proposalState}.</strong>
+          </Text>
+        ) : (
+          <Button
+            colorScheme={"green"}
+            onClick={() => {
+              executeTx.write();
+            }}
+          >
+            ✅ Execute
+          </Button>
+        )}
       </Box>
     </PageLayout>
   );

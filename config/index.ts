@@ -14,10 +14,40 @@ const CLIENT_SECRET =
     ? process.env.PRODUCTION_CLIENT_SECRET
     : process.env.CLIENT_SECRET;
 
+// Proposal info based on status.
+const PROPOSAL_ALERT_INFO: {
+  [key: string]: [
+    "error" | "success" | "loading" | "info" | "warning" | undefined,
+    string
+  ];
+} = {
+  Pending: ["warning", "Proposal is currently pending."],
+  Active: ["info", "Proposal is active, vote now."],
+  Canceled: ["error", "❌ Proposal is canceled."],
+  Defeated: ["error", "❌ Proposal is defeated."],
+  Succeeded: ["info", "🎉 Proposal is succeeded."],
+  Queued: ["warning", "🚀 Proposal is queued and ready to be executed."],
+  Expired: ["error", "❌ Proposal is expired."],
+  Executed: ["success", "🎉 This proposal is already executed."],
+};
+
 const INFO = {
+  // Proposal State.
+  PROPOSAL_STATE: [
+    "Pending",
+    "Active",
+    "Canceled",
+    "Defeated",
+    "Succeeded",
+    "Queued",
+    "Expired",
+    "Executed",
+  ],
+
   CHAIN_ID: {
     POLYGON_TESTNET: "0x13881",
   },
+
   SCAN_URL: "https://mumbai.polygonscan.com/",
   DOCS_URL:
     process.env.NODE_ENV === "production"
@@ -56,6 +86,12 @@ const INFO = {
     ADMIN_PERCENT: 1,
   },
 };
-const CONFIG = { ...INFO, CLIENT_ID, REDIRECT_URI, CLIENT_SECRET };
+const CONFIG = {
+  ...INFO,
+  CLIENT_ID,
+  REDIRECT_URI,
+  CLIENT_SECRET,
+  PROPOSAL_ALERT_INFO,
+};
 
 export default CONFIG;
