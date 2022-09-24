@@ -7,7 +7,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /getting-started
+      link: /Introduction/getting-started.md
     - theme: alt
       text: View on GitHub
       link: https://github.com/vivekascoder/git-dao-ui

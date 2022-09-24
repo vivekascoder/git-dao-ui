@@ -27,6 +27,34 @@ export default {
           },
         ],
       },
+      {
+        text: "📜 Proposals",
+        collapsible: true,
+        items: [
+          {
+            text: "📚 Proposals",
+            link: "/Proposal/",
+          },
+          {
+            text: "⛓ Queue",
+            link: "/Proposal/Queue.md",
+          },
+          {
+            text: "🗳 Execute",
+            link: "/Proposal/Execute.md",
+          },
+        ],
+      },
+      {
+        text: "🔭 Future",
+        collapsible: true,
+        items: [
+          {
+            text: "🪐 Future Plans",
+            link: "/Future/",
+          },
+        ],
+      },
     ],
     footer: {
       message: "Made with ❤️ by @0xStateMachine",
