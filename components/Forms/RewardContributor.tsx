@@ -11,11 +11,14 @@ import {
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useContractWrite } from "wagmi";
 
 import CONFIG from "@/config";
 import { decodeData } from "@/utils";
+import { resolve } from "@/utils/ens";
+
+import ENSInput from "../ENSInput";
 
 import { TParsedDAO } from "@/types";
 
@@ -47,6 +50,9 @@ export const RewardContributorForm = () => {
       const errors: { [key: string]: string } = {};
       if (!ethers.utils.isAddress(values.address)) {
         errors.address = "Not a valid eth address.";
+      }
+      if (values.address.endsWith(".eth")) {
+        errors.address = "Please resolve ENS with the button.";
       }
       if (formik.values.amount <= 0) {
         errors.amount = "Amount should be more than 0";
@@ -108,23 +114,27 @@ export const RewardContributorForm = () => {
     },
   });
 
+  const handleEnsResolve: MouseEventHandler<HTMLButtonElement> = async (e) => {
+    const address = await resolve(formik.values.address);
+    formik.setFieldValue("address", address || formik.values.address);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box experimental_spaceY={4}>
-        <FormControl>
-          <FormLabel htmlFor="address">🦄 Contributor&apos;s Address</FormLabel>
-          <Input
-            type="string"
-            name="address"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-          />
-          <FormHelperText>
-            {formik.errors.address
-              ? "NOTE: " + formik.errors.address
-              : "Address of the contributor"}
-          </FormHelperText>
-        </FormControl>
+        <ENSInput
+          label={"🦄 Contributor's Address"}
+          name="address"
+          value={formik.values.address}
+          onChange={formik.handleChange}
+          helpText={
+            formik.errors.address
+              ? formik.errors.address
+              : "Address of the contributor"
+          }
+          onResolveClick={handleEnsResolve}
+        />
+
         <FormControl>
           <FormLabel htmlFor="amount">🎁 Amount</FormLabel>
           <Input

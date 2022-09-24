@@ -60,6 +60,7 @@ const INFO = {
   CONTRACTS: {
     DAO_FACTORY: "0x33ddc9cD01Be9f68830da11D38E202eA0e1A467f",
   },
+
   INTERFACES: {
     DAO_FACTORY: require("../public/contracts/DAOFactory.sol/DAOFactory.json"),
     DAO_TOKEN: require("../public/contracts/DAOToken.sol/DAOToken.json"),
