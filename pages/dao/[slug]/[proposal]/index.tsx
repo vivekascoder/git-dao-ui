@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Heading,
-  Progress,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -25,6 +24,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import DaoTokenBalance from "@/components/DaoTokenBalance";
 import VoteForm from "@/components/Forms/Vote";
 import PrettyLink from "@/components/PrettyLink";
+import ProgressInfo from "@/components/ProgressInfo";
 
 import CONFIG from "@/config";
 import PageLayout from "@/layouts";
@@ -245,15 +245,15 @@ const ProposalPage: NextPage<IProposal> = (props) => {
         <Heading size={"md"} mt={6}>
           {"# Proposal vote stats."}
         </Heading>
+
+        {/* Voting period progress bar. */}
         <Box mt={4}>
-          <Text>
-            <strong> Voting Period:</strong>
-          </Text>
-          <Progress
-            hasStripe
-            borderRadius={"sm"}
-            colorScheme="yellow"
-            value={
+          <ProgressInfo
+            title="Voting Period:"
+            x={blockNumber.data || 0}
+            y={parseInt(proposal.data.endBlock)}
+            progressColor="yellow"
+            progress={
               blockNumber.data
                 ? Math.floor(
                     ((blockNumber.data - parseInt(proposal.data.startBlock)) /
@@ -268,17 +268,12 @@ const ProposalPage: NextPage<IProposal> = (props) => {
 
         {/* For Votes Progress. */}
         <Box mt={4}>
-          <Text>
-            <strong>For Votes:</strong>{" "}
-            {proposalVotes.data[1].div(ethers.utils.parseEther("1")) +
-              "/" +
-              quorumTotalToken.div(ethers.utils.parseEther("1"))}
-          </Text>
-          <Progress
-            hasStripe
-            borderRadius={"sm"}
-            colorScheme="green"
-            value={parseFloat(
+          <ProgressInfo
+            title="For Votes:"
+            x={proposalVotes.data[1].div(ethers.utils.parseEther("1"))}
+            y={quorumTotalToken.div(ethers.utils.parseEther("1")).toNumber()}
+            progressColor="green"
+            progress={parseFloat(
               forVotes.mul(BigNumber.from(100)).div(quorumTotalToken).toString()
             )}
           />
@@ -286,17 +281,12 @@ const ProposalPage: NextPage<IProposal> = (props) => {
 
         {/* For Against Progress. */}
         <Box mt={4}>
-          <Text>
-            <strong>Agains Votes</strong>:{" "}
-            {proposalVotes.data[0].div(ethers.utils.parseEther("1")) +
-              "/" +
-              quorumTotalToken.div(ethers.utils.parseEther("1"))}
-          </Text>
-          <Progress
-            hasStripe
-            borderRadius={"sm"}
-            colorScheme="red"
-            value={parseFloat(
+          <ProgressInfo
+            title="Against Votes:"
+            x={proposalVotes.data[0].div(ethers.utils.parseEther("1"))}
+            y={quorumTotalToken.div(ethers.utils.parseEther("1")).toNumber()}
+            progressColor="red"
+            progress={parseFloat(
               againstVotes
                 .mul(BigNumber.from(100))
                 .div(quorumTotalToken)
