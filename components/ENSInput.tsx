@@ -7,19 +7,24 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
-import { ChangeEventHandler, MouseEventHandler, useRef } from "react";
+import { forwardRef, MouseEventHandler, useState } from "react";
+
+import { resolve } from "@/utils/ens";
 
 interface IENSInput {
   label: string;
-  value: string;
   name: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
   helpText: string;
-  onResolveClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const ENSInput: React.FC<IENSInput> = (props) => {
-  const address = useRef() as React.MutableRefObject<HTMLInputElement>;
+const ENSInput = forwardRef<HTMLInputElement, IENSInput>((props, ref) => {
+  const [value, setValue] = useState<string>("");
+  const handleEnsResolve: MouseEventHandler<HTMLButtonElement> = async (e) => {
+    if (!value.endsWith(".eth")) return;
+    const address = await resolve(value);
+    if (!address) return;
+    setValue(address);
+  };
 
   return (
     <FormControl>
@@ -28,20 +33,22 @@ const ENSInput: React.FC<IENSInput> = (props) => {
         <Input
           type="string"
           name={props.name}
-          value={props.value}
-          onChange={props.onChange}
-          // flexGrow={"1"}
-          ref={address}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          ref={ref}
         />
         <IconButton
           colorScheme="blue"
           aria-label="Search database"
           icon={<RepeatIcon />}
-          onClick={props.onResolveClick}
+          onClick={handleEnsResolve}
         />
       </HStack>
       <FormHelperText>{props.helpText}</FormHelperText>
     </FormControl>
   );
-};
+});
+
+ENSInput.displayName = "ENSInput";
+
 export default ENSInput;

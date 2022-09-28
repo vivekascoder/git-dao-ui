@@ -11,12 +11,11 @@ import {
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useContractWrite } from "wagmi";
 
 import CONFIG from "@/config";
 import { decodeData } from "@/utils";
-import { resolve } from "@/utils/ens";
 
 import ENSInput from "../ENSInput";
 
@@ -27,6 +26,8 @@ export const RewardContributorForm = () => {
   const router = useRouter();
   const toast = useToast();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     // TODO: If there is issue with the slug (compromised), show error.
     if (!router.query["slug"]) return;
@@ -35,6 +36,24 @@ export const RewardContributorForm = () => {
     ) as TParsedDAO;
     setParsedDao(dao);
   }, [router.query]);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      console.log("Yayy");
+      inputRef.current.addEventListener("keydown", (e) => {
+        // console.log("Virtual event", e);
+        formik.setFieldValue("address", inputRef.current?.value);
+      });
+    }
+    // return () => {
+    //   if (inputRef.current) {
+    //     console.log("Yayy gone");
+    //     inputRef.current.removeEventListener("change", (e) => {
+    //       // Nothing here
+    //     });
+    //   }
+    // };
+  }, [inputRef.current]);
 
   const formik = useFormik<{
     address: string;
@@ -114,10 +133,12 @@ export const RewardContributorForm = () => {
     },
   });
 
-  const handleEnsResolve: MouseEventHandler<HTMLButtonElement> = async (e) => {
-    const address = await resolve(formik.values.address);
-    formik.setFieldValue("address", address || formik.values.address);
-  };
+  if (inputRef) {
+    console.log("Dsa", inputRef?.current?.value);
+    // inputRef.current.onchange((e) => {
+    //   console.log("Changing");
+    // });
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -125,14 +146,12 @@ export const RewardContributorForm = () => {
         <ENSInput
           label={"🦄 Contributor's Address"}
           name="address"
-          value={formik.values.address}
-          onChange={formik.handleChange}
           helpText={
             formik.errors.address
               ? formik.errors.address
               : "Address of the contributor"
           }
-          onResolveClick={handleEnsResolve}
+          ref={inputRef}
         />
 
         <FormControl>

@@ -34,11 +34,12 @@ const CreateProposalPage: NextPage = () => {
       router.query["slug"] as string
     ) as TParsedDAO;
     setParsedDao(dao);
-  }, [parsedDao, router.query]);
+  }, [router.query]);
 
   if (!parsedDao) {
     return <Box>Loading Dao...</Box>;
   }
+  console.log("Parent log...");
 
   return (
     <PageLayout>

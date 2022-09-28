@@ -20,6 +20,7 @@ module.exports = {
     //#region  //*=========== Unused Import ===========
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn",
+    // "react/display-name": "off",
 
     // Because I want to use @ts-ignore comment.
     "@typescript-eslint/ban-ts-comment": "off",
